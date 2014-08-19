@@ -1,0 +1,172 @@
+Changes in laeken version 0.4.6
+
+    + Estimation of a proportion and its variance (class "prop", function
+      'prop' and related changes).
+
+
+Changes in laeken version 0.4.5
+
+    + Added references to JSS paper.
+
+
+Changes in laeken version 0.4.4
+
+    + Updated vignette 'laeken-intro'.
+
+    + Updated some help files.
+
+
+Changes in laeken version 0.4.3
+
+    + Bugfix in 'bootVar' when resampling clusters of observations rather than
+      individuals.
+
+
+Changes in laeken version 0.4.2
+
+    + Bootstrap variance estimation now contains an argument 'cluster', which
+      allows for resampling clusters of observations rather than individuals.
+
+    + Bugfix in 'gpg': arguments 'gender' and 'method' are now passed to
+      'variance'.
+
+    + Updated vignette 'laeken-intro'.
+
+
+Changes in laeken version 0.4.1
+
+    + Reduced run times of examples for 'bootVar' and 'variance'.
+
+    + Functions 'arpt' and 'arpr' can now take a vector of percentages of the
+      weighted median to be used for the at-risk-of-poverty threshold.
+
+    + Updated vignette 'laeken-intro'.
+
+
+Changes in laeken version 0.4.0
+
+    + Added example data 'ses' for the Structure of Earnings Survey.
+
+    + Added vignette 'laeken-intro'.
+
+    + Minimal changes in 'print' method for indicators.
+
+    + Minimal changes in help files and vignettes.
+
+    + Removed attributes from variable 'eqIncome' in example data 'eusilc'.
+
+    + The level names of argument 'gender' in function 'gpg' can now be any
+      character string. Note: the first level of gender should always
+      correspond to females.
+
+
+
+Changes in laeken version 0.3.3
+
+    + New plot method for objects of class "paretoTail".
+
+    + Package roxygen2 is now used for documentation.
+
+    + Bugfixes in 'paretoQPlot' and 'meanExcessPlot': order of graphical
+      parameters 'pch', 'cex', 'col' and 'bg' for the data points is now
+      preserved.
+
+    + Bugfix in 'meanExcessPlot': computation of weighted quantiles no longer
+      throws error.
+
+
+Changes in laeken version 0.3.2
+
+    + Package is built with flag --resave-data to avoid warning with R 2.15.0.
+
+
+Changes in laeken version 0.3.1
+
+    + New arguments in function 'paretoScale' for generalizations of Van Kerm's
+      formula.
+
+    + Updated author affiliation.
+
+
+Changes in laeken version 0.3
+
+    + New function 'gpg' for estimating the gender pay (wage) gap.
+
+    + Fixed function 'bootVar' for package 'boot' >= 1.3-1.
+
+
+
+Changes in laeken version 0.2.3
+
+    + Corrected mistake in formula for weighted Hill estimator in vignette
+      'laeken-pareto'.
+
+
+Changes in laeken version 0.2.2
+
+    + New function 'shrinkOut' for Pareto tail modeling to shrink outliers to
+      the theoretical quantile used for outlier detection.
+
+
+Changes in laeken version 0.2.1
+
+    + Fixed help files for 'meanExcessPlot' and 'paretoQPlot' on Microsoft
+      Windows systems.
+
+    + Fixed package reference in vignette 'laeken-variance'.
+
+
+Changes in laeken version 0.2
+
+    + Functions for fitting a Pareto distribution now have an additional
+      argument 'x0' to specify threshold directly instead of using number of
+      observations 'k' in the tail.
+
+    + In the graphical exploration of the data using 'meanExcessPlot' or
+      'paretoQPlot', sample weights can now be considered and the threshold
+      (scale parameter) can be selected interactively.
+
+    + Function 'paretoQPlot' now simply uses logarithmic y-axis to show the
+      labels in the scale of the original values.
+
+    + Changed default axis labels in 'paretoQPlot'.
+
+    + Sample weights can now be considered when fitting a Pareto distribution
+      using 'thetaHill', 'thetaISE' or 'thetaPDC'.
+
+    + New function 'calibVars' for convenient construction of binary variables
+      for calibration.
+
+    + New functions 'paretoTail', 'replaceTail', 'replaceOut' and 'reweightOut'
+      for improved methodology for Pareto tail modeling with a common interface.
+
+    + Row names of the example data 'eusilc' are now given by 1 to the number
+      of rows.
+
+    + New wrapper function 'weightedMean' for the (weighted) mean.
+
+    + New function 'paretoScale' for estimating the threshold for Pareto tail
+      modeling.
+
+    + Totals for calibrated bootstrap variance are now by default computed from
+      the original data using the Horvitz-Thompson estimator.
+
+    + Added package vignettes 'laeken-standard', 'laeken-pareto' and
+      'laeken-variance'.
+
+
+
+Changes in laeken version 0.1.3
+
+    + Minimal changes in help file for 'calibWeights'.
+
+
+Changes in laeken version 0.1.2
+
+    + Bugfix in 'thetaWML' for bias correction term with weight function based
+      on standardized residuals.
+
+
+Changes in laeken version 0.1.1
+
+    + Bugfix in 'bootVar' in case of breakdown by year and domain.
