@@ -1,3 +1,8 @@
+Changes in laeken version 0.4.7
+
+    + order of factors changed in function
+      'prop'
+
 Changes in laeken version 0.4.6
 
     + Estimation of a proportion and its variance (class "prop", function
