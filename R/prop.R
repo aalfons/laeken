@@ -97,8 +97,35 @@
 #' prop("rb090", weights = "rb050", data = eusilc)
 #'
 #' # values by region
-#' prop("rb090", weights = "rb050",
+#' p1 <- prop("rb090", weights = "rb050",
 #'     breakdown = "db040", data = eusilc)
+#'     
+#' p1
+#' 
+#' variance("rb090", weights = "rb050",
+#'     breakdown = "db040", data = eusilc, indicator=p1,
+#'     X = calibVars(eusilc$db040))    
+#'     
+#'      
+#' eusilc$agecut <- cut(eusilc$age, 2)
+#' p1 <- prop("agecut", weights = "rb050",
+#'            breakdown = "db040", data = eusilc)
+#' p1
+#' 
+#' variance("agecut", weights = "rb050",
+#'          breakdown = "db040", data = eusilc, indicator=p1,
+#'          X = calibVars(eusilc$db040))
+#' 
+#' 
+#' eusilc$eqIncomeCat <- factor(ifelse(eusilc$eqIncome < quantile(eusilc$eqIncome,0.2), "one", "two"))
+#' p1 <- prop("eqIncomeCat", weights = "rb050",
+#'            breakdown = "db040", data = eusilc)
+#' p1
+#' 
+#' variance("eqIncomeCat", weights = "rb050",
+#'          breakdown = "db040", data = eusilc, indicator=p1,
+#'          X = calibVars(eusilc$db040))       
+#'         
 #'
 #' @export
 
@@ -185,7 +212,7 @@ prop <- function(bin, weights = NULL, sort = NULL, years = NULL,
                        years=ys, strata=rs)
   # variance estimation (if requested)
   if(!is.null(var)) {
-    bin <- as.numeric(as.integer(bin) - 1)
+    bin <- ifelse(as.numeric(as.integer(bin)), 0,1)
     res <- variance(bin, weights, years, breakdown, design, cluster,
                     indicator=res, alpha=alpha, na.rm=na.rm, type=var, ...)
   }
@@ -210,5 +237,5 @@ propCoeff <- function(x, weights = NULL, sort = NULL, na.rm = FALSE) {
   ## calculations
   ## bin to numeric
   x <- as.integer(x)
-  weightedMean(x-1, weights)
+  1-weightedMean(x-1, weights)
 }
