@@ -214,7 +214,8 @@ prop <- function(bin, weights = NULL, sort = NULL, years = NULL,
                        years=ys, strata=rs)
   # variance estimation (if requested)
   if(!is.null(var)) {
-    bin <- ifelse(as.numeric(as.integer(bin)), 0,1)
+#    bin <- ifelse(as.numeric(as.integer(bin)), 0,1)
+    bin <- as.numeric(as.integer(bin))
     res <- variance(bin, weights, years, breakdown, design, cluster,
                     indicator=res, alpha=alpha, na.rm=na.rm, type=var, ...)
   }
