@@ -82,7 +82,7 @@ weightedQuantile <- function(x, weights = NULL, probs = seq(0, 1, 0.25),
         function(p) {
             if (p == 0) return(x[1])
             else if (p == 1) return(x[n])
-            select <- min(which(rw >= p))
+            select <- min(which(rw > p))
             if(rw[select] == p) mean(x[select:(select+1)])
             else x[select]
         })
