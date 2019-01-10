@@ -104,9 +104,11 @@ p1 <- prop("rb090", weights = "rb050",
 
 p1
 
+\dontrun{
 variance("rb090", weights = "rb050",
     breakdown = "db040", data = eusilc, indicator=p1,
     cluster="db030", X = calibVars(eusilc$db040))
+}
 
 
 eusilc$agecut <- cut(eusilc$age, 2)
@@ -115,9 +117,11 @@ p1 <- prop("agecut", weights = "rb050",
            cluster="db030", data = eusilc)
 p1
 
+\dontrun{
 variance("agecut", weights = "rb050",
          breakdown = "db040", data = eusilc, indicator=p1,
          X = calibVars(eusilc$db040), cluster="db030")
+}
 
 
 eusilc$eqIncomeCat <- factor(ifelse(eusilc$eqIncome < quantile(eusilc$eqIncome,0.2), "one", "two"))
@@ -125,9 +129,11 @@ p1 <- prop("eqIncomeCat", weights = "rb050",
            breakdown = "db040", data = eusilc, cluster="db030")
 p1
 
+\dontrun{
 variance("eqIncomeCat", weights = "rb050",
          breakdown = "db040", data = eusilc, indicator=p1,
          X = calibVars(eusilc$db040), cluster="db030")
+}
 
 
 }
