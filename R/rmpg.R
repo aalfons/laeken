@@ -4,15 +4,15 @@
 # ---------------------------------------
 
 #' Relative median at-risk-of-poverty gap
-#' 
+#'
 #' Estimate the relative median at-risk-of-poverty gap, which is defined as the
 #' relative difference between the median equivalized disposable income of
 #' persons below the at-risk-of-poverty threshold and the at-risk-of-poverty
 #' threshold itself (expressed as a percentage of the at-risk-of-poverty
 #' threshold).
-#' 
+#'
 #' The implementation strictly follows the Eurostat definition.
-#' 
+#'
 #' @param inc either a numeric vector giving the equivalized disposable income,
 #' or (if \code{data} is not \code{NULL}) a character string, an integer or a
 #' logical vector specifying the corresponding column of \code{data}.
@@ -38,10 +38,10 @@
 #' designs, or (if \code{data} is not \code{NULL}) a character string, an
 #' integer or a logical vector specifying the corresponding column of
 #' \code{data}.
-#' @param cluster optional and only used if \code{var} is not \code{NULL}; 
-#' either an integer vector or factor giving different clusters for cluster 
-#' sampling designs, or (if \code{data} is not \code{NULL}) a character string, 
-#' an integer or a logical vector specifying the corresponding column of 
+#' @param cluster optional and only used if \code{var} is not \code{NULL};
+#' either an integer vector or factor giving different clusters for cluster
+#' sampling designs, or (if \code{data} is not \code{NULL}) a character string,
+#' an integer or a logical vector specifying the corresponding column of
 #' \code{data}.
 #' @param data an optional \code{data.frame}.
 #' @param var a character string specifying the type of variance estimation to
@@ -53,63 +53,64 @@
 #' @param na.rm a logical indicating whether missing values should be removed.
 #' @param \dots if \code{var} is not \code{NULL}, additional arguments to be
 #' passed to \code{\link{variance}}.
-#' 
+#'
 #' @return A list of class \code{"rmpg"} (which inherits from the class
 #' \code{"indicator"}) with the following components:
-#' @returnItem value a numeric vector containing the overall value(s).
-#' @returnItem valueByStratum a \code{data.frame} containing the values by
-#' domain, or \code{NULL}.
-#' @returnItem varMethod a character string specifying the type of variance
-#' estimation used, or \code{NULL} if variance estimation was omitted.
-#' @returnItem var a numeric vector containing the variance estimate(s), or
-#' \code{NULL}.
-#' @returnItem varByStratum a \code{data.frame} containing the variance
-#' estimates by domain, or \code{NULL}.
-#' @returnItem ci a numeric vector or matrix containing the lower and upper
-#' endpoints of the confidence interval(s), or \code{NULL}.
-#' @returnItem ciByStratum a \code{data.frame} containing the lower and upper
-#' endpoints of the confidence intervals by domain, or \code{NULL}.
-#' @returnItem alpha a numeric value giving the significance level used for
+#' \item{value}{a numeric vector containing the overall value(s).}
+#' \item{valueByStratum}{a \code{data.frame} containing the values by
+#' domain, or \code{NULL}.}
+#' \item{varMethod}{a character string specifying the type of variance
+#' estimation used, or \code{NULL} if variance estimation was omitted.}
+#' \item{var}{a numeric vector containing the variance estimate(s), or
+#' \code{NULL}.}
+#' \item{varByStratum}{a \code{data.frame} containing the variance
+#' estimates by domain, or \code{NULL}.}
+#' \item{ci}{a numeric vector or matrix containing the lower and upper
+#' endpoints of the confidence interval(s), or \code{NULL}.}
+#' \item{ciByStratum}{a \code{data.frame} containing the lower and upper
+#' endpoints of the confidence intervals by domain, or \code{NULL}.}
+#' \item{alpha}{a numeric value giving the significance level used for
 #' computing the confidence interval(s) (i.e., the confidence level is \eqn{1 -
-#' }\code{alpha}), or \code{NULL}.
-#' @returnItem years a numeric vector containing the different years of the
-#' survey.
-#' @returnItem strata a character vector containing the different domains of the
-#' breakdown.
-#' @returnItem threshold a numeric vector containing the at-risk-of-poverty
-#' threshold(s).
-#' 
+#' }\code{alpha}), or \code{NULL}.}
+#' \item{years}{a numeric vector containing the different years of the
+#' survey.}
+#' \item{strata}{a character vector containing the different domains of the
+#' breakdown.}
+#' \item{threshold}{a numeric vector containing the at-risk-of-poverty
+#' threshold(s).}
+#'
 #' @author Andreas Alfons
-#' 
+#'
 #' @seealso \code{\link{arpt}}, \code{\link{variance}}
-#' 
-#' @references 
-#' A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators 
-#' from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of 
-#' Statistical Software}, \bold{54}(15), 1--25.  URL 
+#'
+#' @references
+#' A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators
+#' from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of
+#' Statistical Software}, \bold{54}(15), 1--25.  URL
 #' \url{http://www.jstatsoft.org/v54/i15/}
-#' 
-#' Working group on Statistics on Income and Living Conditions (2004) 
-#' Common cross-sectional EU indicators based on EU-SILC; the gender 
+#'
+#' Working group on Statistics on Income and Living Conditions (2004)
+#' Common cross-sectional EU indicators based on EU-SILC; the gender
 #' pay gap.  \emph{EU-SILC 131-rev/04}, Eurostat, Luxembourg.
-#' 
+#'
 #' @keywords survey
-#' 
+#'
 #' @examples
 #' data(eusilc)
-#' 
+#'
 #' # overall value
 #' rmpg("eqIncome", weights = "rb050", data = eusilc)
-#' 
+#'
 #' # values by region
-#' rmpg("eqIncome", weights = "rb050", 
+#' rmpg("eqIncome", weights = "rb050",
 #'     breakdown = "db040", data = eusilc)
-#' 
+#'
+#' @importFrom stats aggregate
 #' @export
 
-rmpg <- function(inc, weights = NULL, sort = NULL, years = NULL, 
-                 breakdown = NULL, design = NULL, cluster = NULL, 
-                 data = NULL, var = NULL, alpha = 0.05, 
+rmpg <- function(inc, weights = NULL, sort = NULL, years = NULL,
+                 breakdown = NULL, design = NULL, cluster = NULL,
+                 data = NULL, var = NULL, alpha = 0.05,
                  na.rm = FALSE, ...) {
   ## initializations
   byYear <- !is.null(years)
@@ -163,8 +164,8 @@ rmpg <- function(inc, weights = NULL, sort = NULL, years = NULL,
       i <- years == y
       relativeGap(inc[i], weights[i], sort[i], t, na.rm=na.rm)
     }
-    value <- mapply(rg, y=ys, t=ts, 
-                    MoreArgs=list(inc=inc, weights=weights, sort=sort, 
+    value <- mapply(rg, y=ys, t=ts,
+                    MoreArgs=list(inc=inc, weights=weights, sort=sort,
                                   years=years, na.rm=na.rm))
     names(value) <- ys  # use years as names
     if(byStratum) {
@@ -173,8 +174,8 @@ rmpg <- function(inc, weights = NULL, sort = NULL, years = NULL,
         t <- ts[as.character(y)]
         relativeGap(inc[i], weights[i], sort[i], t, na.rm=na.rm)
       }
-      valueByStratum <- aggregate(1:n, list(year=years, stratum=breakdown), 
-                                  rg1, inc=inc, weights=weights, sort=sort, 
+      valueByStratum <- aggregate(1:n, list(year=years, stratum=breakdown),
+                                  rg1, inc=inc, weights=weights, sort=sort,
                                   years=years, ts=ts, na.rm=na.rm)
       names(valueByStratum)[3] <- "value"
     } else valueByStratum <- NULL
@@ -186,19 +187,19 @@ rmpg <- function(inc, weights = NULL, sort = NULL, years = NULL,
       rg2 <- function(i, inc, weights, sort, ts, na.rm) {
         relativeGap(inc[i], weights[i], sort[i], ts, na.rm=na.rm)
       }
-      valueByStratum <- aggregate(1:n, list(stratum=breakdown), 
-                                  rg2, inc=inc, weights=weights, sort=sort, 
+      valueByStratum <- aggregate(1:n, list(stratum=breakdown),
+                                  rg2, inc=inc, weights=weights, sort=sort,
                                   ts=ts, na.rm=na.rm)
       names(valueByStratum)[2] <- "value"
     } else valueByStratum <- NULL
   }
   rs <- levels(breakdown)  # unique strata (also works if 'breakdown' is NULL)
   ## create object of class "arpr"
-  res <- constructRmpg(value=value, valueByStratum=valueByStratum, 
+  res <- constructRmpg(value=value, valueByStratum=valueByStratum,
                        years=ys, strata=rs, threshold=ts)
   # variance estimation (if requested)
   if(!is.null(var)) {
-    res <- variance(inc, weights, years, breakdown, design, cluster, 
+    res <- variance(inc, weights, years, breakdown, design, cluster,
                     indicator=res, alpha=alpha, na.rm=na.rm, type=var, ...)
   }
   ## return result
@@ -206,7 +207,7 @@ rmpg <- function(inc, weights = NULL, sort = NULL, years = NULL,
 }
 
 ## workhorse
-relativeGap <- function(x, weights = NULL, sort = NULL, 
+relativeGap <- function(x, weights = NULL, sort = NULL,
                         threshold, na.rm = FALSE) {
   ## initializations
   if(is.null(weights)) weights <- rep.int(1, length(x))  # equal weights

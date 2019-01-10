@@ -4,11 +4,11 @@
 # ----------------------------------------
 
 #' Fit income distribution models with the Pareto distribution
-#' 
+#'
 #' Fit a Pareto distribution to the upper tail of income data.  Since a
 #' theoretical distribution is used for the upper tail, this is a semiparametric
 #' approach.
-#' 
+#'
 #' The arguments \code{k} and \code{x0} of course correspond with each other.
 #' If \code{k} is supplied, the threshold \code{x0} is estimated with the \eqn{n
 #' - k} largest value in \code{x}, where \eqn{n} is the number of observations.
@@ -16,7 +16,7 @@
 #' by the number of observations in \code{x} larger than \code{x0}.  Therefore,
 #' either \code{k} or \code{x0} needs to be supplied.  If both are supplied,
 #' only \code{k} is used (mainly for back compatibility).
-#' 
+#'
 #' The function supplied to \code{method} should take a numeric vector (the
 #' observations) as its first argument.  If \code{k} is supplied, it will be
 #' passed on (in this case, the function is required to have an argument called
@@ -26,7 +26,7 @@
 #' the function specified by \code{method} can handle sample weights, the
 #' corresponding argument should be called \code{w}.  Additional arguments are
 #' passed via the \dots{} argument.
-#' 
+#'
 #' @param x a numeric vector.
 #' @param k the number of observations in the upper tail to which the Pareto
 #' distribution is fitted.
@@ -44,47 +44,48 @@
 #' is assigned the same value.
 #' @param w an optional numeric vector giving sample weights.
 #' @param \dots addtional arguments to be passed to the specified method.
-#' 
+#'
 #' @return A numeric vector with a Pareto distribution fit to the upper tail.
-#' 
+#'
 #' @note The arguments \code{x0} for the threshold (scale parameter) of the
 #' Pareto distribution and \code{w} for sample weights were introduced in
 #' version 0.2.  This results in slightly different behavior regarding the
 #' function calls to \code{method} compared to prior versions.
-#' 
+#'
 #' @author Andreas Alfons and Josef Holzer
-#' 
+#'
 #' @seealso \code{\link{paretoTail}}, \code{\link{replaceTail}}
-#' 
+#'
 #' \code{\link{thetaPDC}}, \code{\link{thetaWML}}, \code{\link{thetaHill}},
 #' \code{\link{thetaISE}}, \code{\link{thetaLS}}, \code{\link{thetaMoment}},
 #' \code{\link{thetaQQ}}, \code{\link{thetaTM}}
-#' 
+#'
 #' @keywords manip
-#' 
+#'
 #' @examples
 #' data(eusilc)
-#' 
-#' 
+#'
+#'
 #' ## gini coefficient without Pareto tail modeling
 #' gini("eqIncome", weights = "rb050", data = eusilc)
-#' 
-#' 
+#'
+#'
 #' ## gini coefficient with Pareto tail modeling
-#' 
+#'
 #' # using number of observations in tail
-#' eqIncome <- fitPareto(eusilc$eqIncome, k = 175, 
+#' eqIncome <- fitPareto(eusilc$eqIncome, k = 175,
 #'     w = eusilc$db090, groups = eusilc$db030)
 #' gini(eqIncome, weights = eusilc$rb050)
-#' 
+#'
 #' # using threshold
-#' eqIncome <- fitPareto(eusilc$eqIncome, x0 = 44150, 
+#' eqIncome <- fitPareto(eusilc$eqIncome, x0 = 44150,
 #'     w = eusilc$db090, groups = eusilc$db030)
 #' gini(eqIncome, weights = eusilc$rb050)
-#' 
+#'
+#' @importFrom stats optimize runif uniroot
 #' @export
 
-fitPareto <- function(x, k = NULL, x0 = NULL, 
+fitPareto <- function(x, k = NULL, x0 = NULL,
         method = "thetaPDC", groups = NULL, w = NULL, ...) {
     ## initializations
     if(!is.numeric(x) || length(x) == 0) stop("'x' must be a numeric vector")

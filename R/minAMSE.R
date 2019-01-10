@@ -7,22 +7,22 @@
 ## it is strongly recommended to set bounds 'kmax' and 'mmax'
 
 #' Weighted asymptotic mean squared error (AMSE) estimator
-#' 
+#'
 #' Estimate the scale and shape parameters of a Pareto distribution with an
 #' iterative procedure based on minimizing the weighted asymptotic mean squared
 #' error (AMSE) of the Hill estimator.
-#' 
+#'
 #' The weights used in the weighted AMSE depend on a nuisance parameter
 #' \eqn{\rho}{rho}.  Both the optimal number of observations in the tail and the
 #' nuisance parameter \eqn{\rho}{rho} are estimated iteratively using nonlinear
 #' integer minimization.  This is currently done by a brute force algorithm,
 #' hence it is stronly recommended to supply upper bounds \code{kmax} and
 #' \code{mmax}.
-#' 
+#'
 #' See the references for more details on the iterative algorithm.
-#' 
+#'
 #' @aliases print.minAMSE
-#' 
+#'
 #' @param x for \code{minAMSE}, a numeric vector.  The \code{print} method is
 #' called by the generic function if an object of class \code{"minAMSE"} is
 #' supplied.
@@ -45,45 +45,44 @@
 #' @param maxit a positive integer giving the maximum number of iterations.
 #' @param \dots additional arguments to be passed to
 #' \code{\link[base]{print.default}}.
-#' 
-#' @return An object of class \code{"minAMSE"} containing the following
-#' components:
-#' @returnItem kopt the optimal number of observations in the tail.
-#' @returnItem x0 the corresponding threshold.
-#' @returnItem theta the estimated shape parameter of the Pareto distribution.
-#' @returnItem MSEmin the minimal MSE.
-#' @returnItem rho the estimated nuisance parameter.
-#' @returnItem k the examined range for the number of observations in the tail.
-#' @returnItem MSE the corresponding MSEs.
-#' 
+#'
+#' @return An object of class \code{"minAMSE"} with the following components:
+#' \item{kopt}{the optimal number of observations in the tail.}
+#' \item{x0}{the corresponding threshold.}
+#' \item{theta}{the estimated shape parameter of the Pareto distribution.}
+#' \item{MSEmin}{the minimal MSE.}
+#' \item{rho}{the estimated nuisance parameter.}
+#' \item{k}{the examined range for the number of observations in the tail.}
+#' \item{MSE}{the corresponding MSEs.}
+#'
 #' @author Josef Holzer and Andreas Alfons
-#' 
+#'
 #' @seealso \code{\link{thetaHill}}
-#' 
+#'
 #' @references Beirlant, J., Vynckier, P. and Teugels, J.L. (1996) Tail index
 #' estimation, Pareto quantile plots, and regression diagnostics. \emph{Journal
 #' of the American Statistical Association}, \bold{91}(436), 1659--1667.
-#' 
+#'
 #' Beirlant, J., Vynckier, P. and Teugels, J.L. (1996) Excess functions and
 #' estimation of the extreme-value index. \emph{Bernoulli}, \bold{2}(4),
 #' 293--318.
-#' 
+#'
 #' Dupuis, D.J. and Victoria-Feser, M.-P. (2006) A robust prediction error
 #' criterion for Pareto modelling of upper tails. \emph{The Canadian Journal of
 #' Statistics}, \bold{34}(4), 639--658.
-#' 
+#'
 #' @keywords manip
-#' 
+#'
 #' @examples
 #' data(eusilc)
 #' # equivalized disposable income is equal for each household
 #' # member, therefore only one household member is taken
-#' minAMSE(eusilc$eqIncome[!duplicated(eusilc$db030)], 
+#' minAMSE(eusilc$eqIncome[!duplicated(eusilc$db030)],
 #'     kmin = 50, kmax = 150, mmax = 250)
-#' 
+#'
 #' @export
 
-minAMSE <- function(x, weight = c("Bernoulli", "JASA"), 
+minAMSE <- function(x, weight = c("Bernoulli", "JASA"),
         kmin, kmax, mmax, tol = 0, maxit = 100) {
     ## initializations
     if(!is.numeric(x) || length(x) == 0) stop("'x' must be a numeric vector")
@@ -112,27 +111,27 @@ minAMSE <- function(x, weight = c("Bernoulli", "JASA"),
     ## check bounds for k
     if(kmin < kbounds[1]) {
         kmin <- kbounds[1]
-        warning("'kmin' is set to ", kbounds[1], 
+        warning("'kmin' is set to ", kbounds[1],
             ", as this is the suggested minumum")
     }
     if(kmax > kbounds[2]) {
         kmax <- kbounds[2]
-        warning("'kmax' is set to ", kbounds[2], 
+        warning("'kmax' is set to ", kbounds[2],
             ", as this is the allowed maximum")
     }
     ## check bound for m
     if(mmax > mbound) {
         mmax <- mbound
-        warning("'mmax' is set to ", mbound, 
+        warning("'mmax' is set to ", mbound,
             ", as this is the allowed maximum")
     }
-    ## Hill estimates of theta for range of k 
+    ## Hill estimates of theta for range of k
     kl <- trunc(kmin/2)
     theta <- rep.int(NA, kmax)
     theta[kl:mmax] <- sapply(kl:mmax, function(k) thetaHill(x, k))  # shape
     ## initial estimate of k
     k <- kmin:kmax  # range of k to search for minimum
-    MSE <- mapply(function(k, theta) MSEinit(x, k, theta), 
+    MSE <- mapply(function(k, theta) MSEinit(x, k, theta),
         k, theta[(kmin:kmax)-kl+1])
     k0 <- k[which.min(MSE)]
     theta0 <- theta[k0]
@@ -162,7 +161,7 @@ minAMSE <- function(x, weight = c("Bernoulli", "JASA"),
         }
     }
     ## return results
-    res <- list(kopt=kn, x0=x[n-kn], theta=thetan, 
+    res <- list(kopt=kn, x0=x[n-kn], theta=thetan,
         MSEmin=MSEmin, rho=rhon, k=k, MSE=MSE)
     class(res) <- "minAMSE"
     res

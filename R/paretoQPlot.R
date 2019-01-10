@@ -4,10 +4,10 @@
 # ----------------------------------------
 
 #' Pareto quantile plot
-#' 
+#'
 #' The Pareto quantile plot is a graphical method for inspecting the parameters
 #' of a Pareto distribution.
-#' 
+#'
 #' If the Pareto model holds, there exists a linear relationship between the
 #' lograrithms of the observed values and the quantiles of the standard
 #' exponential distribution, since the logarithm of a Pareto distributed random
@@ -18,81 +18,82 @@
 #' used as an estimate of the threshold (scale parameter). The slope of the
 #' fitted line is in turn an estimate of \eqn{\frac{1}{\theta}}{1/theta}, the
 #' reciprocal of the shape parameter.
-#' 
+#'
 #' The interactive selection of the threshold (scale parameter) is implemented
 #' using \code{\link[graphics]{identify}}.  For the usual \code{X11} device, the
 #' selection process is thus terminated by pressing any mouse button other than
 #' the first.  For the \code{quartz} device (on Mac OS X systems), the process
 #' is terminated either by a secondary click (usually second mouse button or
 #' \code{Ctrl}-click) or by pressing the \code{ESC} key.
-#' 
+#'
 #' @param x a numeric vector.
 #' @param w an optional numeric vector giving sample weights.
 #' @param xlab,ylab axis labels.
 #' @param interactive a logical indicating whether the threshold (scale
 #' parameter) can be selected interactively by clicking on points.  Information
 #' on the selected threshold is then printed on the console.
-#' @param x0,theta optional; if estimates of the threshold (scale parameter) 
-#' and the shape parameter have already been obtained, they can be passed 
-#' through the corresponding argument (\code{x0} for the threshold, 
-#' \code{theta} for the shape parameter).  If both arguments are supplied and 
-#' \code{interactive} is not \code{TRUE}, reference lines are drawn to indicate 
+#' @param x0,theta optional; if estimates of the threshold (scale parameter)
+#' and the shape parameter have already been obtained, they can be passed
+#' through the corresponding argument (\code{x0} for the threshold,
+#' \code{theta} for the shape parameter).  If both arguments are supplied and
+#' \code{interactive} is not \code{TRUE}, reference lines are drawn to indicate
 #' the parameter estimates.
-#' @param pch,cex,col,bg graphical parameters for the plot symbol of each data 
-#' point (see \code{\link[graphics]{points}}).  
+#' @param pch,cex,col,bg graphical parameters for the plot symbol of each data
+#' point (see \code{\link[graphics]{points}}).
 #' @param \dots additional arguments to be passed to
 #' \code{\link[graphics]{plot.default}}.
-#' 
+#'
 #' @return If \code{interactive} is \code{TRUE}, the last selection for the
 #' threshold is returned invisibly as an object of class \code{"paretoScale"},
 #' which consists of the following components:
-#' @returnItem x0 the selected threshold (scale parameter).
-#' @returnItem k the number of observations in the tail (i.e., larger than the
-#' threshold).
-#' 
+#' \item{x0}{the selected threshold (scale parameter).}
+#' \item{k}{the number of observations in the tail (i.e., larger than the
+#' threshold).}
+#'
 #' @note The functionality to account for sample weights and to select the
 #' threshold (scale parameter) interactively was introduced in version 0.2.
 #' Also starting with version 0.2, a logarithmic y-axis is now used to display
 #' the axis labels in the scale of the original values.
-#' 
+#'
 #' @author Andreas Alfons and Josef Holzer
-#' 
-#' @seealso \code{\link{paretoScale}}, \code{\link{paretoTail}}, 
-#' \code{\link{minAMSE}}, \code{\link{meanExcessPlot}}, 
+#'
+#' @seealso \code{\link{paretoScale}}, \code{\link{paretoTail}},
+#' \code{\link{minAMSE}}, \code{\link{meanExcessPlot}},
 #' \code{\link[graphics]{identify}}
-#' 
-#' @references 
-#' A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators 
-#' from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of 
-#' Statistical Software}, \bold{54}(15), 1--25.  URL 
+#'
+#' @references
+#' A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators
+#' from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of
+#' Statistical Software}, \bold{54}(15), 1--25.  URL
 #' \url{http://www.jstatsoft.org/v54/i15/}
-#' 
-#' A. Alfons, M. Templ, P. Filzmoser (2013) Robust estimation of economic 
-#' indicators from survey samples based on Pareto tail modeling. \emph{Journal 
+#'
+#' A. Alfons, M. Templ, P. Filzmoser (2013) Robust estimation of economic
+#' indicators from survey samples based on Pareto tail modeling. \emph{Journal
 #' of the Royal Statistical Society, Series C}, \bold{62}(2), 271--286.
-#' 
-#' Beirlant, J., Vynckier, P. and Teugels, J.L. (1996) Tail index estimation, 
-#' Pareto quantile plots, and regression diagnostics. \emph{Journal of the 
+#'
+#' Beirlant, J., Vynckier, P. and Teugels, J.L. (1996) Tail index estimation,
+#' Pareto quantile plots, and regression diagnostics. \emph{Journal of the
 #' American Statistical Association}, \bold{91}(436), 1659--1667.
-#' 
+#'
 #' @keywords hplot
-#' 
+#'
 #' @examples
 #' data(eusilc)
 #' # equivalized disposable income is equal for each household
 #' # member, therefore only one household member is taken
 #' eusilc <- eusilc[!duplicated(eusilc$db030),]
-#' 
+#'
 #' # with sample weights
 #' paretoQPlot(eusilc$eqIncome, w = eusilc$db090)
-#' 
+#'
 #' # without sample weights
 #' paretoQPlot(eusilc$eqIncome)
-#' 
+#'
+#' @importFrom graphics identify abline par plot
 #' @export
 
-paretoQPlot <- function(x, w = NULL, xlab = NULL, ylab = NULL, 
-        interactive = TRUE, x0 = NULL, theta = NULL, pch = par("pch"), 
+paretoQPlot <- function(x, w = NULL, xlab = NULL, ylab = NULL,
+        interactive = TRUE, x0 = NULL, theta = NULL, pch = par("pch"),
         cex = par("cex"), col = par("col"), bg = "transparent", ...) {
     ## initializations
     n <- length(x)
@@ -135,7 +136,7 @@ paretoQPlot <- function(x, w = NULL, xlab = NULL, ylab = NULL,
     ## create plot
     if(is.null(xlab)) xlab <- "Theoretical quantiles"
     if(is.null(ylab)) ylab <- ""
-    localPlot <- function(x, y, main = "Pareto quantile plot", 
+    localPlot <- function(x, y, main = "Pareto quantile plot",
             log, xlog, ylog, ...) {
         suppressWarnings(plot(x, y, main=main, log="y", ...))
     }

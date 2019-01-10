@@ -109,8 +109,9 @@
 #'     data = eusilc, indicator = a, R = 50,
 #'     X = calibVars(eusilc$db040), seed = 123)
 #'
+#' @importFrom stats runif
+#' @importFrom boot boot boot.ci
 #' @export
-#' @import boot
 
 bootVar <- function(inc, weights = NULL, years = NULL, breakdown = NULL,
                     design = NULL, cluster = NULL, data = NULL, indicator,

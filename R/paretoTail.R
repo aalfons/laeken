@@ -49,25 +49,26 @@
 #' further treatment with \code{\link{reweightOut}} or \code{\link{replaceOut}}.
 #' @param \dots addtional arguments to be passed to the specified method.
 #'
-#' @returnClass paretoTail
-#' @returnItem x the supplied numeric vector.
-#' @returnItem k the number of observations in the upper tail to which the
-#' Pareto distribution has been fitted.
-#' @returnItem groups if supplied, the vector or factor specifying groups of
-#' elements.
-#' @returnItem w if supplied, the numeric vector of sample weights.
-#' @returnItem method the function used to estimate the shape parameter, or the
-#' name of the function.
-#' @returnItem x0 the scale parameter.
-#' @returnItem theta the estimated shape parameter.
-#' @returnItem tail if \code{groups} is not \code{NULL}, this gives the groups
+#' @return An object of class \code{"paretoTail"} with the following
+#' components:
+#' \item{x}{the supplied numeric vector.}
+#' \item{k}{the number of observations in the upper tail to which the
+#' Pareto distribution has been fitted.}
+#' \item{groups}{if supplied, the vector or factor specifying groups of
+#' elements.}
+#' \item{w}{if supplied, the numeric vector of sample weights.}
+#' \item{method}{the function used to estimate the shape parameter, or the
+#' name of the function.}
+#' \item{x0}{the scale parameter.}
+#' \item{theta}{the estimated shape parameter.}
+#' \item{tail}{if \code{groups} is not \code{NULL}, this gives the groups
 #' with values larger than the threshold (scale parameter), otherwise the
-#' indices of observations in the upper tail.
-#' @returnItem alpha the tuning parameter \code{alpha} used for flagging
-#' outliers.
-#' @returnItem out if \code{groups} is not \code{NULL}, this gives the groups
+#' indices of observations in the upper tail.}
+#' \item{alpha}{the tuning parameter \code{alpha} used for flagging
+#' outliers.}
+#' \item{out}{if \code{groups} is not \code{NULL}, this gives the groups
 #' that are flagged as outliers, otherwise the indices of the flagged
-#' observations.
+#' observations.}
 #'
 #' @author Andreas Alfons
 #'
@@ -124,6 +125,7 @@
 #' eqIncome <- replaceTail(fit)
 #' gini(eqIncome, weights = eusilc$rb050)
 #'
+#' @importFrom stats qexp runif
 #' @export
 
 paretoTail <- function(x, k = NULL, x0 = NULL, method = "thetaPDC",

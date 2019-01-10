@@ -38,10 +38,11 @@
 #' @param na.rm a logical indicating whether missing values in \code{x} should
 #' be omitted.
 #'
-#' @returnClass paretoScale
-#' @returnItem x0 the threshold (scale parameter).
-#' @returnItem k the number of observations in the tail (i.e., larger than the
-#' threshold).
+#' @return An object of class \code{"paretoScale"} with the following
+#' components:
+#' \item{x0}{the threshold (scale parameter).}
+#' \item{k}{the number of observations in the tail (i.e., larger than the
+#' threshold).}
 #'
 #' @author Andreas Alfons
 #'
