@@ -43,8 +43,8 @@
 #' @param tol an integer giving the desired tolerance level for finding the
 #' optimal number of observations in the tail.
 #' @param maxit a positive integer giving the maximum number of iterations.
-#' @param \dots additional arguments to be passed to
-#' \code{\link[base]{print.default}}.
+## @param \dots additional arguments to be passed to
+## \code{\link[base]{print.default}}.
 #'
 #' @return An object of class \code{"minAMSE"} with the following components:
 #' \item{kopt}{the optimal number of observations in the tail.}
@@ -78,7 +78,7 @@
 #' # equivalized disposable income is equal for each household
 #' # member, therefore only one household member is taken
 #' minAMSE(eusilc$eqIncome[!duplicated(eusilc$db030)],
-#'     kmin = 50, kmax = 150, mmax = 250)
+#'     kmin = 60, kmax = 150, mmax = 250)
 #'
 #' @export
 

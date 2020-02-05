@@ -35,9 +35,6 @@ optimal number of observations for computing the nuisance parameter
 optimal number of observations in the tail.}
 
 \item{maxit}{a positive integer giving the maximum number of iterations.}
-
-\item{\dots}{additional arguments to be passed to
-\code{\link[base]{print.default}}.}
 }
 \value{
 An object of class \code{"minAMSE"} with the following components:
@@ -69,7 +66,7 @@ data(eusilc)
 # equivalized disposable income is equal for each household
 # member, therefore only one household member is taken
 minAMSE(eusilc$eqIncome[!duplicated(eusilc$db030)],
-    kmin = 50, kmax = 150, mmax = 250)
+    kmin = 60, kmax = 150, mmax = 250)
 
 }
 \references{

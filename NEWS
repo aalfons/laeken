@@ -1,13 +1,19 @@
+Changes in laeken version 0.5.1
+
+    + Fixed documentation of 'minAMSE'.
+
+
 Changes in laeken version 0.5.0
 
-    + order of factors changed in function 'prop'
+    + Order of factors changed in function 'prop'.
 
-    + bugfixes in computation of weighted quantiles and quintile share ratio
-      to strictly follow Eurostat definitions
+    + Bugfixes in computation of weighted quantiles and quintile share ratio
+      to strictly follow Eurostat definitions.
 
-    + Package title now in title case
+    + Package title now in title case.
 
-    + packages 'boot' and 'MASS' are now only Imports instead of Depends
+    + Packages 'boot' and 'MASS' are now only Imports instead of Depends.
+
 
 
 Changes in laeken version 0.4.6
