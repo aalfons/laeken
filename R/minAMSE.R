@@ -21,8 +21,6 @@
 #'
 #' See the references for more details on the iterative algorithm.
 #'
-#' @aliases print.minAMSE
-#'
 #' @param x for \code{minAMSE}, a numeric vector.  The \code{print} method is
 #' called by the generic function if an object of class \code{"minAMSE"} is
 #' supplied.
@@ -43,8 +41,8 @@
 #' @param tol an integer giving the desired tolerance level for finding the
 #' optimal number of observations in the tail.
 #' @param maxit a positive integer giving the maximum number of iterations.
-## @param \dots additional arguments to be passed to
-## \code{\link[base]{print.default}}.
+#' @param \dots additional arguments to be passed to
+#' \code{\link[base]{print.default}}.
 #'
 #' @return An object of class \code{"minAMSE"} with the following components:
 #' \item{kopt}{the optimal number of observations in the tail.}

@@ -238,6 +238,8 @@ print.rmpg <- function(x, ...) {
 }
 
 # class "minAMSE"
+#' @rdname minAMSE
+#' @method print minAMSE
 #' @export
 print.minAMSE <- function(x, ...) {
 	cat("Optimal k:\n")
