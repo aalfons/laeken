@@ -51,6 +51,7 @@
 #' @param alpha numeric; if \code{var} is not \code{NULL}, this gives the
 #' significance level to be used for computing the confidence interval (i.e.,
 #' the confidence level is \eqn{1 - }\code{alpha}).
+#' @param threshold if `NULL`, the at-risk-at-poverty threshold is estimated from the data.
 #' @param na.rm a logical indicating whether missing values should be removed.
 #' @param \dots if \code{var} is not \code{NULL}, additional arguments to be
 #' passed to \code{\link{variance}}.
@@ -114,7 +115,7 @@
 arpr <- function(inc, weights = NULL, sort = NULL, years = NULL,
                  breakdown = NULL, design = NULL, cluster = NULL,
                  data = NULL, p = 0.6, var = NULL, alpha = 0.05,
-                 na.rm = FALSE, ...) {
+                 threshold = NULL, na.rm = FALSE, ...) {
   ## initializations
   byYear <- !is.null(years)
   byStratum <- !is.null(breakdown)
@@ -166,7 +167,11 @@ arpr <- function(inc, weights = NULL, sort = NULL, years = NULL,
   rs <- levels(breakdown)  # unique strata (also works if 'breakdown' is NULL)
   if(byYear) {  # ARPR by year
     ys <- sort(unique(years))
-    ts <- arpt(inc, weights, sort, years, p=p, na.rm=na.rm)  # thresholds
+    if(is.null(threshold)){
+      ts <- arpt(inc, weights, sort, years, p=p, na.rm=na.rm)  # thresholds
+    } else {
+      ts <- threshold
+    }
     wr <- function(y, t, inc, weights, years, na.rm) {
       i <- years == y
       weightedRate(inc[i], weights[i], t, na.rm=na.rm)
@@ -188,7 +193,11 @@ arpr <- function(inc, weights = NULL, sort = NULL, years = NULL,
     } else valueByStratum <- NULL
   } else {  # ARPR for only one year
     ys <- NULL
-    ts <- arpt(inc, weights, sort, p=p, na.rm=na.rm)  # threshold
+    if(is.null(threshold)){
+      ts <- arpt(inc, weights, sort, p=p, na.rm=na.rm)  # threshold
+    } else{
+      ts <- threshold
+    }
     value <- weightedRate(inc, weights, ts, na.rm=na.rm)
     if(byP) names(value) <- getPLabels(p)
     if(byStratum) {
