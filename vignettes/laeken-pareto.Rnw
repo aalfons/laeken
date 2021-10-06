@@ -26,17 +26,17 @@
 
 \title{Robust Pareto Tail Modeling for the Estimation of Indicators on Social Exclusion using the \proglang{R} Package \pkg{laeken}}
 %\author{
-%  Andreas Alfons\footnote{Vienna University of Technology, 
-%  \href{mailto:alfons@statistik.tuwien.ac.at}{alfons@statistik.tuwien.ac.at}}, 
-%  Matthias Templ\footnote{Vienna University of Technology \& Statistics Austria, 
+%  Andreas Alfons\footnote{Vienna University of Technology,
+%  \href{mailto:alfons@statistik.tuwien.ac.at}{alfons@statistik.tuwien.ac.at}},
+%  Matthias Templ\footnote{Vienna University of Technology \& Statistics Austria,
 %  \href{mailto:templ@tuwien.ac.at}{templ@tuwien.ac.at}},
-%  Peter Filzmoser\footnote{Vienna University of Technology, 
+%  Peter Filzmoser\footnote{Vienna University of Technology,
 %  \href{mailto:p.filzmoser@tuwien.ac.at}{p.filzmoser@tuwien.ac.at}},
-%  Josef Holzer\footnote{Landesstatistik Steiermark, 
+%  Josef Holzer\footnote{Landesstatistik Steiermark,
 %  \href{mailto:josef.holzer@stmk.gv.at}{josef.holzer@stmk.gv.at}}
 %}
 \author{
-  Andreas Alfons$^{1}$, Matthias Templ$^{2}$, Peter Filzmoser$^{3}$, 
+  Andreas Alfons$^{1}$, Matthias Templ$^{2}$, Peter Filzmoser$^{3}$,
   Josef Holzer$^{4}$
 }
 \date{}
@@ -52,16 +52,13 @@
 }
 \footnotetext[2]{
   \begin{tabular}[t]{l}
-  Department of Statistics and Probability Theory, Vienna University of 
-  Technology\\
-  Methods Unit, Statistics Austria\\ 
-  E-mail: \href{mailto:templ@tuwien.ac.at}{templ@tuwien.ac.at}
+  Zurich University of Applied Sciences\\
+  E-mail: \href{mailto:matthias.templ@zhaw.ch}{matthias.templ@zhaw.ch}
   \end{tabular}
 }
 \footnotetext[3]{
   \begin{tabular}[t]{l}
-  Department of Statistics and Probability Theory, Vienna University of 
-  Technology\\
+  Vienna University of Technology\\
   E-mail: \href{mailto:p.filzmoser@tuwien.ac.at}{p.filzmoser@tuwien.ac.at}
   \end{tabular}
 }
@@ -83,14 +80,14 @@ options(prompt="R> ")
 
 
 \paragraph{Abstract}
-In this vignette, robust semiparametric estimation of social exclusion 
-indicators using the \proglang{R} package \pkg{laeken} is discussed. Special 
-emphasis is thereby given to income inequality indicators, as the standard 
-estimates for these indicators are highly influenced by outliers in the upper 
-tail of the income distribution. This influence can be reduced by modeling the 
-upper tail with a Pareto distribution in a robust manner. While the focus of 
-the paper is to demonstrate the functionality of \pkg{laeken} beyond the 
-standard estimation techniques, a brief mathematical description of the 
+In this vignette, robust semiparametric estimation of social exclusion
+indicators using the \proglang{R} package \pkg{laeken} is discussed. Special
+emphasis is thereby given to income inequality indicators, as the standard
+estimates for these indicators are highly influenced by outliers in the upper
+tail of the income distribution. This influence can be reduced by modeling the
+upper tail with a Pareto distribution in a robust manner. While the focus of
+the paper is to demonstrate the functionality of \pkg{laeken} beyond the
+standard estimation techniques, a brief mathematical description of the
 implemented procedures is given as well.
 
 
@@ -100,69 +97,69 @@ implemented procedures is given as well.
 
 \section{Introduction}
 
-From a robustness point of view, the standard estimators for some of the social 
-exclusion indicators defined by \citet{EU-SILC04, EU-SILC09} are problematic. 
-In particular the income inequality indicators \emph{quintile share ratio} 
-(QSR) and \emph{Gini coefficient} suffer from a lack of robustness. Consider, 
-e.g., the QSR, which is estimated as the ratio of estimated totals or means 
-(see Section~\ref{sec:QSR} for an exact definition). It is well known that the 
-classical estimates for totals or means have a breakdown point of 0, meaning 
-that even a single outlier can distort the results to an arbitrary extent. In 
-fact, the influence of a single observation in the upper tail of the income 
-distribution on the estimation of the QSR is linear and therefore unbounded. 
-For practical purposes, the standard QSR estimator thus cannot be recommended 
-in many situations \citep[cf.][]{hulliger09a}. It is also important to note that 
+From a robustness point of view, the standard estimators for some of the social
+exclusion indicators defined by \citet{EU-SILC04, EU-SILC09} are problematic.
+In particular the income inequality indicators \emph{quintile share ratio}
+(QSR) and \emph{Gini coefficient} suffer from a lack of robustness. Consider,
+e.g., the QSR, which is estimated as the ratio of estimated totals or means
+(see Section~\ref{sec:QSR} for an exact definition). It is well known that the
+classical estimates for totals or means have a breakdown point of 0, meaning
+that even a single outlier can distort the results to an arbitrary extent. In
+fact, the influence of a single observation in the upper tail of the income
+distribution on the estimation of the QSR is linear and therefore unbounded.
+For practical purposes, the standard QSR estimator thus cannot be recommended
+in many situations \citep[cf.][]{hulliger09a}. It is also important to note that
 the behavior of the Gini coefficient is similar to the behavior of the QSR.
 
-The data basis for the estimation of the social exclusion indicators according 
-to \citet{EU-SILC04, EU-SILC09} is the \emph{European Union Statistics on 
-Income and Living Conditions} (EU-SILC), which is an annual panel survey 
-conducted in EU member states and other European countries. On the one hand, 
-EU-SILC data typically contain a considerable amount of \emph{representative} 
-outliers in the upper tail of the income distribution, i.e., correct 
-observations that behave differently from the main part of the data, but that 
-are not unique in the population and hence need to be considered for computing 
-estimates of the indicators. On the other hand, EU-SILC data frequently contain 
-some even more extreme \emph{nonrepresentative} outliers, i.e., observations 
-that are either incorrect or can be considered unique in the population. 
-Consequently, such nonrepresentative outliers need to be excluded from the 
+The data basis for the estimation of the social exclusion indicators according
+to \citet{EU-SILC04, EU-SILC09} is the \emph{European Union Statistics on
+Income and Living Conditions} (EU-SILC), which is an annual panel survey
+conducted in EU member states and other European countries. On the one hand,
+EU-SILC data typically contain a considerable amount of \emph{representative}
+outliers in the upper tail of the income distribution, i.e., correct
+observations that behave differently from the main part of the data, but that
+are not unique in the population and hence need to be considered for computing
+estimates of the indicators. On the other hand, EU-SILC data frequently contain
+some even more extreme \emph{nonrepresentative} outliers, i.e., observations
+that are either incorrect or can be considered unique in the population.
+Consequently, such nonrepresentative outliers need to be excluded from the
 estimation process or downweighted.
 
-As a remedy, the upper tail of the income distribution may be modeled with a 
-\emph{Pareto distribution} in order to recalibrate the sample weights or use 
-fitted income values for observations in the upper tail when estimating the 
-indicators (see Section~\ref{sec:fit}). 
-%This is highly applicable because the upper tail of the income distribution in 
-%EU-SILC data virtually always contains a considerable amount of representative 
-%outliers. 
-Nevertheless, classical estimators for the parameters of the Pareto 
-distribution are highly influenced by the nonrepresentative outliers 
-themselves. Using robust methods reduces the influence on fitting the Pareto 
-distribution to the representative outliers and therefore on the estimation of 
-the indicators. 
+As a remedy, the upper tail of the income distribution may be modeled with a
+\emph{Pareto distribution} in order to recalibrate the sample weights or use
+fitted income values for observations in the upper tail when estimating the
+indicators (see Section~\ref{sec:fit}).
+%This is highly applicable because the upper tail of the income distribution in
+%EU-SILC data virtually always contains a considerable amount of representative
+%outliers.
+Nevertheless, classical estimators for the parameters of the Pareto
+distribution are highly influenced by the nonrepresentative outliers
+themselves. Using robust methods reduces the influence on fitting the Pareto
+distribution to the representative outliers and therefore on the estimation of
+the indicators.
 
-Rather than evaluating these methods, the paper concentrates on showing how 
-they can be applied in the statistical environment \proglang{R} \citep{RDev} 
-with the add-on package \pkg{laeken} \citep{laeken}. The basic design of the 
-package, as well as standard estimation of the social exclusion indicators is 
-discussed in detail in vignette \code{laeken-standard} \citep{templ11a}. 
-Furthermore, the general framework for variance estimation is illustrated in 
-vignette \code{laeken-variance} \citep{templ11b}. Those documents can be viewed 
+Rather than evaluating these methods, the paper concentrates on showing how
+they can be applied in the statistical environment \proglang{R} \citep{RDev}
+with the add-on package \pkg{laeken} \citep{laeken}. The basic design of the
+package, as well as standard estimation of the social exclusion indicators is
+discussed in detail in vignette \code{laeken-standard} \citep{templ11a}.
+Furthermore, the general framework for variance estimation is illustrated in
+vignette \code{laeken-variance} \citep{templ11b}. Those documents can be viewed
 from within \proglang{R} with the following commands:
 <<eval=FALSE>>=
 vignette("laeken-standard")
 vignette("laeken-variance")
 @
-Morover, a general introduction to package \pkg{laeken} is published as 
+Morover, a general introduction to package \pkg{laeken} is published as
 \citet{alfons13b}.
 
-Throughout the paper, the example data from package \pkg{laeken} is used. The 
-data set is called \code{eusilc} and consists of $14\,827$ observations from 
-$6\,000$ households. In addition, it was synthetically generated from Austrian 
-EU-SILC survey data from 2006 using the data simulation methodology proposed by 
-\citet{alfons11c} and implemented in the \proglang{R} package 
-\pkg{simPopulation} \citep{simPopulation}. More information on the example data can 
-be found in vignette \code{laeken-standard} or in the corresponding 
+Throughout the paper, the example data from package \pkg{laeken} is used. The
+data set is called \code{eusilc} and consists of $14\,827$ observations from
+$6\,000$ households. In addition, it was synthetically generated from Austrian
+EU-SILC survey data from 2006 using the data simulation methodology proposed by
+\citet{alfons11c} and implemented in the \proglang{R} package
+\pkg{simPopulation} \citep{simPopulation}. More information on the example data can
+be found in vignette \code{laeken-standard} or in the corresponding
 \proglang{R} help page.
 
 <<>>=
@@ -170,15 +167,15 @@ library("laeken")
 data("eusilc")
 @
 
-The rest of the paper is organized as follows. Section~\ref{sec:laeken} 
-gives a mathematical description of the Eurostat definitions of the social 
-exclusion indicators QSR and Gini coefficient. In Section~\ref{sec:Pareto}, the 
-Pareto distribution is briefly discussed. Section~\ref{sec:threshold} discusses 
-a rule of thumb for estimating the threshold for the upper tail of the 
-distribution, and illustrates graphical methods for exploring the data in order 
-to find the threshold. Classical and robust estimators for the shape parameter 
-of the Pareto distribution are described in Section~\ref{sec:shape}. How to use 
-Pareto tail modeling to estimate the social exclusion indicators is then shown 
+The rest of the paper is organized as follows. Section~\ref{sec:laeken}
+gives a mathematical description of the Eurostat definitions of the social
+exclusion indicators QSR and Gini coefficient. In Section~\ref{sec:Pareto}, the
+Pareto distribution is briefly discussed. Section~\ref{sec:threshold} discusses
+a rule of thumb for estimating the threshold for the upper tail of the
+distribution, and illustrates graphical methods for exploring the data in order
+to find the threshold. Classical and robust estimators for the shape parameter
+of the Pareto distribution are described in Section~\ref{sec:shape}. How to use
+Pareto tail modeling to estimate the social exclusion indicators is then shown
 in Section~\ref{sec:fit}. Finally, Section~\ref{sec:concl} concludes.
 
 
@@ -187,78 +184,78 @@ in Section~\ref{sec:fit}. Finally, Section~\ref{sec:concl} concludes.
 % -------------------
 
 \section{Social exclusion indicators} \label{sec:laeken}
-This paper is focused on the inequality indicators \emph{quintile share ratio} 
-(QSR) and \emph{Gini coefficient}, which are both highly influenced by outliers 
-in the upper tail of the distribution. Note that for the estimation of the 
-social exclusion indicators, each person in a household is assigned the same 
-\emph{eqivalized disposable income}. See vignette \code{laeken-standard} 
-\citep{templ11a} for the computation of the equivalized disposable income with 
+This paper is focused on the inequality indicators \emph{quintile share ratio}
+(QSR) and \emph{Gini coefficient}, which are both highly influenced by outliers
+in the upper tail of the distribution. Note that for the estimation of the
+social exclusion indicators, each person in a household is assigned the same
+\emph{eqivalized disposable income}. See vignette \code{laeken-standard}
+\citep{templ11a} for the computation of the equivalized disposable income with
 the \proglang{R} package \pkg{laeken}.
 
-For the following definitions, let $\boldsymbol{x} := (x_{1}, \ldots, x_{n})'$ 
-be the equivalized disposable income with $x_{1} \leq \ldots \leq x_{n}$ and 
-let $\boldsymbol{w} := (w_{i}, \ldots, w_{n})'$ be the corresponding personal 
+For the following definitions, let $\boldsymbol{x} := (x_{1}, \ldots, x_{n})'$
+be the equivalized disposable income with $x_{1} \leq \ldots \leq x_{n}$ and
+let $\boldsymbol{w} := (w_{i}, \ldots, w_{n})'$ be the corresponding personal
 sample weights, where $n$ denotes the number of observations.
 
 \subsection{Quintile share ratio (QSR)} \label{sec:QSR}
 
-The income \emph{quintile share ratio} (QSR) is defined as the ratio of the sum 
-of the equivalized disposable income received by the 20\% of the population 
-with the highest equivalized disposable income to that received by the 20\% of 
-the population with the lowest equivalized disposable income \citep{EU-SILC04, 
+The income \emph{quintile share ratio} (QSR) is defined as the ratio of the sum
+of the equivalized disposable income received by the 20\% of the population
+with the highest equivalized disposable income to that received by the 20\% of
+the population with the lowest equivalized disposable income \citep{EU-SILC04,
 EU-SILC09}.
 
-For the estimation of the quintile share ratio from a sample, let 
-$\hat{q}_{0.2}$ and $\hat{q}_{0.8}$ denote the weighted 20\% and 80\% 
-quantiles, respectively. With $0 \leq p \leq 1$, these weighted quantiles are 
-given by 
+For the estimation of the quintile share ratio from a sample, let
+$\hat{q}_{0.2}$ and $\hat{q}_{0.8}$ denote the weighted 20\% and 80\%
+quantiles, respectively. With $0 \leq p \leq 1$, these weighted quantiles are
+given by
 \begin{equation} \label{eq:wq}
-\hat{q}_{p} = \hat{q}_{p} (\boldsymbol{x}, \boldsymbol{w}) := 
+\hat{q}_{p} = \hat{q}_{p} (\boldsymbol{x}, \boldsymbol{w}) :=
 \begin{cases}
-  \frac{1}{2} (x_{j} + x_{j+1}), & \quad \text{if } \sum_{i=1}^{j} w_{i} = p 
+  \frac{1}{2} (x_{j} + x_{j+1}), & \quad \text{if } \sum_{i=1}^{j} w_{i} = p
                                    \sum_{i=1}^{n} w_{i}, \\
-  x_{j+1}, & \quad \text{if } \sum_{i=1}^{j} w_{i} < p \sum_{i=1}^{n} w_{i} < 
+  x_{j+1}, & \quad \text{if } \sum_{i=1}^{j} w_{i} < p \sum_{i=1}^{n} w_{i} <
              \sum_{i=1}^{j+1} w_{i}.
 \end{cases}
 \end{equation}
-%See also vignette \code{laeken-standard} \citep{templ11a} for the computation 
-%of these quantiles with package \pkg{laeken}. 
-Using index sets \mbox{$I_{\leq \hat{q}_{0.2}} := \{ i \in \{ 1, \ldots, n \} : 
-x_{i} \leq \hat{q}_{0.2} \}$} and \mbox{$I_{> \hat{q}_{0.8}} := \{ i \in \{ 1, 
-\ldots, n \} : x_{i} > \hat{q}_{0.8} \}$}, the quintile share ratio is 
+%See also vignette \code{laeken-standard} \citep{templ11a} for the computation
+%of these quantiles with package \pkg{laeken}.
+Using index sets \mbox{$I_{\leq \hat{q}_{0.2}} := \{ i \in \{ 1, \ldots, n \} :
+x_{i} \leq \hat{q}_{0.2} \}$} and \mbox{$I_{> \hat{q}_{0.8}} := \{ i \in \{ 1,
+\ldots, n \} : x_{i} > \hat{q}_{0.8} \}$}, the quintile share ratio is
 estimated by
 \begin{equation}
-\widehat{QSR} := \frac{\sum_{i \in I_{> \hat{q}_{0.8}}} w_{i} x_{i}}{\sum_{i 
+\widehat{QSR} := \frac{\sum_{i \in I_{> \hat{q}_{0.8}}} w_{i} x_{i}}{\sum_{i
 \in I_{\leq \hat{q}_{0.2}}} w_{i} x_{i}}.
 \end{equation}
 
-With package \pkg{laeken}, the quintile share ratio can be estimated using the 
-function \code{qsr()}. Sample weights can thereby be supplied via the 
+With package \pkg{laeken}, the quintile share ratio can be estimated using the
+function \code{qsr()}. Sample weights can thereby be supplied via the
 \code{weights} argument.
 <<>>=
-qsr("eqIncome", weights = "rb050", data = eusilc)   
+qsr("eqIncome", weights = "rb050", data = eusilc)
 @
 
 
 \subsection{Gini coefficient} \label{sec:Gini}
 
-The \emph{Gini coefficient} is defined as the relationship of cumulative shares 
-of the population arranged according to the level of equivalized disposable 
-income, to the cumulative share of the equivalized total disposable income 
+The \emph{Gini coefficient} is defined as the relationship of cumulative shares
+of the population arranged according to the level of equivalized disposable
+income, to the cumulative share of the equivalized total disposable income
 received by them \citep{EU-SILC04, EU-SILC09}.
 
-For the estimation of the Gini coefficient from a sample, the sample weights 
-need to be taken into account. In mathematical terms, the Gini coefficient is 
+For the estimation of the Gini coefficient from a sample, the sample weights
+need to be taken into account. In mathematical terms, the Gini coefficient is
 estimated by
 \begin{equation}
-\widehat{Gini} :=  100 \left[ \frac{2 \sum_{i=1}^{n} \left( w_{i} x_{i} 
-\sum_{j=1}^{i} w_{j} \right) - \sum_{i=1}^{n} w_{i}^{\phantom{i}2} 
-x_{i}}{\left( \sum_{i=1}^{n} w_{i} \right) \sum_{i=1}^{n} \left(w_{i} x_{i} 
+\widehat{Gini} :=  100 \left[ \frac{2 \sum_{i=1}^{n} \left( w_{i} x_{i}
+\sum_{j=1}^{i} w_{j} \right) - \sum_{i=1}^{n} w_{i}^{\phantom{i}2}
+x_{i}}{\left( \sum_{i=1}^{n} w_{i} \right) \sum_{i=1}^{n} \left(w_{i} x_{i}
 \right)} - 1 \right].
 \end{equation}
 
-The function \code{gini()} is available in \pkg{laeken} to estimate the Gini 
-coefficient. As before, sample weights can be specified with the \code{weights} 
+The function \code{gini()} is available in \pkg{laeken} to estimate the Gini
+coefficient. As before, sample weights can be specified with the \code{weights}
 argument.
 <<>>=
 gini("eqIncome", weights = "rb050", data = eusilc)
@@ -271,7 +268,7 @@ gini("eqIncome", weights = "rb050", data = eusilc)
 
 \section{The Pareto distribution} \label{sec:Pareto}
 
-The \emph{Pareto distribution} is well studied in the literature and is defined 
+The \emph{Pareto distribution} is well studied in the literature and is defined
 in terms of its cumulative distribution function
 \begin{equation} \label{eq:CDF}
 F_{\theta}(x) = 1 - \left( \frac{x}{x_{0}} \right) ^{-\theta}, \qquad x \geq
@@ -284,13 +281,13 @@ f_{\theta}(x) = \frac{\theta x_{0}^{\theta}}{x^{\theta + 1}}, \qquad x \geq
 x_{0}.
 \end{equation}
 
-Figure~\ref{fig:Pareto} visualizes the Pareto probability density function with 
-scale parameter $x_{0} = 1$ and different values of the shape parameter 
-$\theta$. Clearly, the Pareto distribution is a highly right-skewed 
-distribution with a heavy tail. It is therefore reasonable to assume that a 
-random variable following a Pareto distribution contains extreme values. The 
-effect of changing the shape parameter $\theta$ is visible in the probability 
-mass at the scale parameter $x_{0}$: the higher $\theta$, the higher the 
+Figure~\ref{fig:Pareto} visualizes the Pareto probability density function with
+scale parameter $x_{0} = 1$ and different values of the shape parameter
+$\theta$. Clearly, the Pareto distribution is a highly right-skewed
+distribution with a heavy tail. It is therefore reasonable to assume that a
+random variable following a Pareto distribution contains extreme values. The
+effect of changing the shape parameter $\theta$ is visible in the probability
+mass at the scale parameter $x_{0}$: the higher $\theta$, the higher the
 probability mass at $x_{0}$.
 
 <<echo=FALSE, results=hide>>=
@@ -305,7 +302,7 @@ y3 <- dpareto(x, theta=3)
 \begin{center}
 <<fig=TRUE, width=6, height=4, echo=FALSE, results=hide>>=
 par(mar = c(4, 4, 0.5, 0.5) + 0.1)
-plot(x, y3, type = "l", lty = 3, ylab = "f(x)", xlim = c(0.75, 6), 
+plot(x, y3, type = "l", lty = 3, ylab = "f(x)", xlim = c(0.75, 6),
     panel.first = {
         abline(h = 0, col = grey(0.75))
         abline(v = 1, col = grey(0.75))
@@ -315,7 +312,7 @@ lines(x, y1, lty = 1)
 leg <- expression(paste(theta, " = 1"), paste(theta, " = 2"), paste(theta, " = 3"))
 legend("topright", legend = leg, lty = 1:3)
 @
-\caption{Pareto probability density functions with parameters $x_{0} = 1$ and 
+\caption{Pareto probability density functions with parameters $x_{0} = 1$ and
 $\theta = 1, 2, 3$.}
 \label{fig:Pareto}
 \end{center}
@@ -343,16 +340,16 @@ In this scenario, the threshold $x_{0}$ is estimated by
 \begin{equation}
 \hat{x}_{0} := x_{n-k}.
 \end{equation}
-If an estimate $\hat{x}_{0}$ for the scale parameter of the Pareto distribution 
-has been obtained, $k$ is given by the number of observations larger than 
-$\hat{x}_{0}$. Thus estimating $x_{0}$ and $k$ directly corresponds with each 
+If an estimate $\hat{x}_{0}$ for the scale parameter of the Pareto distribution
+has been obtained, $k$ is given by the number of observations larger than
+$\hat{x}_{0}$. Thus estimating $x_{0}$ and $k$ directly corresponds with each
 other.
 
-In the remainder of this package vignette, the equivalized disposable income of 
-the EU-SILC example data is of main interest. Consequently, the Pareto 
-distribution will be modeled at the household level rather than the individual 
-level. Moreover, the focus of this vignette is on robust estimation of the 
-social exclusion indicators. Hence the equivalized disposable income of the 
+In the remainder of this package vignette, the equivalized disposable income of
+the EU-SILC example data is of main interest. Consequently, the Pareto
+distribution will be modeled at the household level rather than the individual
+level. Moreover, the focus of this vignette is on robust estimation of the
+social exclusion indicators. Hence the equivalized disposable income of the
 household with the largest income is replaced by a large outlier.
 
 <<>>=
@@ -360,10 +357,10 @@ hID <- eusilc$db030[which.max(eusilc$eqIncome)]
 eusilc[eusilc$db030 == hID, "eqIncome"] <- 10000000
 @
 
-Since the aim is to model a Pareto distribution at the household level, the 
-following command creates a data set that contains only the equivalized 
-disposable income and the sample weights on the household level. This data set 
-will be used in Sections~\ref{sec:threshold} and~\ref{sec:shape} to estimate the 
+Since the aim is to model a Pareto distribution at the household level, the
+following command creates a data set that contains only the equivalized
+disposable income and the sample weights on the household level. This data set
+will be used in Sections~\ref{sec:threshold} and~\ref{sec:shape} to estimate the
 parameters of the Pareto distribution.
 
 <<>>=
@@ -377,49 +374,49 @@ eusilcH <- eusilc[!duplicated(eusilc$db030), c("eqIncome", "db090")]
 
 \section{Finding the threshold} \label{sec:threshold}
 
-The aim of the methods presented in this sections is to find the threshold 
-$x_{0}$ for modeling the Pareto distribution. Several methods for the 
-estimation of the threshold $x_{0}$ or the number of observations $k$ in the 
-tail have been proposed in the literature, but those proposals typically do not 
+The aim of the methods presented in this sections is to find the threshold
+$x_{0}$ for modeling the Pareto distribution. Several methods for the
+estimation of the threshold $x_{0}$ or the number of observations $k$ in the
+tail have been proposed in the literature, but those proposals typically do not
 consider sample weights.
 
-\citet{beirlant96a, beirlant96b} developed a procedure that analytically 
-determines the optimal choice of $k$ for the Hill estimator of the shape 
-parameter  \citep[see also Section~\ref{sec:Hill} of this paper]{hill75} by 
-minimizing the asymptotic mean squared error (AMSE). In package \pkg{laeken}, 
-this approach is implemented in the function \code{minAMSE()}. However, the 
-procedure is designed for the non-robust Hill estimator and is therefore not 
-further discussed in this paper. Furthermore, \citet{danielsson01} proposed a 
-bootstrap method to find the optimal $k$ for the Hill estimator with respect to 
-the AMSE, which has less analytical requirements than the approach by 
-\citet{beirlant96a, beirlant96b}. Please note that this method is not robust 
-either and that it is currently not available in package \pkg{laeken}. A robust 
-prediction error criterion for choosing the number of observations $k$ in the 
-tail and estimating the shape parameter $\theta$ was developed by 
-\citet{dupuis06}. Nevertheless, our implementation of this robust criterion was 
+\citet{beirlant96a, beirlant96b} developed a procedure that analytically
+determines the optimal choice of $k$ for the Hill estimator of the shape
+parameter  \citep[see also Section~\ref{sec:Hill} of this paper]{hill75} by
+minimizing the asymptotic mean squared error (AMSE). In package \pkg{laeken},
+this approach is implemented in the function \code{minAMSE()}. However, the
+procedure is designed for the non-robust Hill estimator and is therefore not
+further discussed in this paper. Furthermore, \citet{danielsson01} proposed a
+bootstrap method to find the optimal $k$ for the Hill estimator with respect to
+the AMSE, which has less analytical requirements than the approach by
+\citet{beirlant96a, beirlant96b}. Please note that this method is not robust
+either and that it is currently not available in package \pkg{laeken}. A robust
+prediction error criterion for choosing the number of observations $k$ in the
+tail and estimating the shape parameter $\theta$ was developed by
+\citet{dupuis06}. Nevertheless, our implementation of this robust criterion was
 unstable and is therefore not included in \pkg{laeken}.
 
-In any case, \citet{holzer09} concludes that graphical methods for finding the 
-threshold outperform those analytical approaches in the case of EU-SILC data. 
-While this section is thus focused graphical methods, a simple rule of thumb 
-designed specifically for the equivalized disposable income in EU-SILC data is 
+In any case, \citet{holzer09} concludes that graphical methods for finding the
+threshold outperform those analytical approaches in the case of EU-SILC data.
+While this section is thus focused graphical methods, a simple rule of thumb
+designed specifically for the equivalized disposable income in EU-SILC data is
 described in the following as well.
 
 
 \subsection{Van Kerm's rule of thumb} \label{sec:vanKerm}
-\citet{vankerm07} presented a formula that is more of a rule of thumb for the 
+\citet{vankerm07} presented a formula that is more of a rule of thumb for the
 threshold of the equivalized disposable income in EU-SILC data. Is is given by
 \begin{equation}
 \hat{x}_{0} := \min(\max(2.5\bar{x}, q_{0.98}), q_{0.97}),
 \end{equation}
-where $\bar{x}$ is the weighted mean, and $q_{0.98}$ and $q_{0.97}$ are 
+where $\bar{x}$ is the weighted mean, and $q_{0.98}$ and $q_{0.97}$ are
 weighted quantiles as defined in Equation~(\ref{eq:wq}).
 
-In package \pkg{laeken}, the function \code{paretoScale()} provides 
-functionality for computing the threshold with van Kerm's rule of thumb. The 
-argument \code{w} is available to supply sample weights. 
-%In the example below, the household IDs are supplied via the argument 
-%\code{groups} to estimate the threshold on the houshold level rather than the 
+In package \pkg{laeken}, the function \code{paretoScale()} provides
+functionality for computing the threshold with van Kerm's rule of thumb. The
+argument \code{w} is available to supply sample weights.
+%In the example below, the household IDs are supplied via the argument
+%\code{groups} to estimate the threshold on the houshold level rather than the
 %personal level.
 %<<>>=
 %paretoScale(eusilc$eqIncome, eusilc$db090, groups = eusilc$db030)
@@ -428,64 +425,64 @@ argument \code{w} is available to supply sample weights.
 ts <- paretoScale(eusilcH$eqIncome, w = eusilcH$db090)
 ts
 @
-It should be noted that the function returns an object of class 
-\code{"paretoScale"}, which consists of a component \code{x0} for the threshold 
-(scale parameter) and a component \code{k} for the number of observations in 
+It should be noted that the function returns an object of class
+\code{"paretoScale"}, which consists of a component \code{x0} for the threshold
+(scale parameter) and a component \code{k} for the number of observations in
 the tail of the distribution, i.e., that are larger than the threshold.
 
 
 \subsection{Pareto quantile plot}
-The \emph{Pareto quantile plot} is a graphical method for inspecting the 
-parameters of a Pareto distribution. For the case without sample weights, it is 
+The \emph{Pareto quantile plot} is a graphical method for inspecting the
+parameters of a Pareto distribution. For the case without sample weights, it is
 described in detail in \citet{beirlant96a}.
 
-If the Pareto model holds, there exists a linear relationship between the 
-lograrithms of the observed values and the quantiles of the standard 
-exponential distribution, since the logarithm of a Pareto distributed random 
-variable follows an exponential distribution. Hence the logarithms of the 
-observed values, $\log (x_{i})$, $i = 1, \ldots, n$, are plotted against the 
+If the Pareto model holds, there exists a linear relationship between the
+lograrithms of the observed values and the quantiles of the standard
+exponential distribution, since the logarithm of a Pareto distributed random
+variable follows an exponential distribution. Hence the logarithms of the
+observed values, $\log (x_{i})$, $i = 1, \ldots, n$, are plotted against the
 theoretical quantiles.
 
-In the case without sample weights, the theoretical quantiles of the standard 
+In the case without sample weights, the theoretical quantiles of the standard
 exponential distribution are given by
 \begin{equation} \label{eq:quantiles}
 -\log \left( 1 - \frac{i}{n+1} \right), \qquad i = 1, \ldots, n,
 \end{equation}
-i.e., by dividing the range into $n + 1$ equally sized 
-subsets and using the resulting $n$ inner gridpoints as probabilities for the 
-quantiles. If the data contain sample weights, the range of the exponential 
-distribution needs to be divided according to the weights of the $n$ 
-observations. The Pareto quantile plot is thus generalized by using the 
+i.e., by dividing the range into $n + 1$ equally sized
+subsets and using the resulting $n$ inner gridpoints as probabilities for the
+quantiles. If the data contain sample weights, the range of the exponential
+distribution needs to be divided according to the weights of the $n$
+observations. The Pareto quantile plot is thus generalized by using the
 theoretical quantiles
 \begin{equation}
--\log \left( 1 - \frac{\sum_{j=1}^{i} w_{j}}{\sum_{j=1}^{n} w_{j}} 
+-\log \left( 1 - \frac{\sum_{j=1}^{i} w_{j}}{\sum_{j=1}^{n} w_{j}}
 \frac{n}{n+1} \right), \qquad i = 1, \ldots, n,
 \end{equation}
-where the correction factor $\frac{n}{n+1}$ ensures that the quantiles reduce 
+where the correction factor $\frac{n}{n+1}$ ensures that the quantiles reduce
 to (\ref{eq:quantiles}) if all sample weights are equal.
 
-If the tail of the data follows a Pareto distribution, those observations form 
-almost a straight line.  The leftmost point of a fitted line can thus be used 
-as an estimate of the threshold $x_{0}$, the scale parameter. All values 
-starting from the point after the threshold may be modeled by a Pareto 
-distribution, but this point cannot be determined exactly. Furthermore, the 
-slope of the fitted line is in turn an estimate of $\frac{1}{\theta}$, the 
+If the tail of the data follows a Pareto distribution, those observations form
+almost a straight line.  The leftmost point of a fitted line can thus be used
+as an estimate of the threshold $x_{0}$, the scale parameter. All values
+starting from the point after the threshold may be modeled by a Pareto
+distribution, but this point cannot be determined exactly. Furthermore, the
+slope of the fitted line is in turn an estimate of $\frac{1}{\theta}$, the
 reciprocal of the shape parameter.
 
-Figure~\ref{fig:ParetoQuantile} displays the Pareto quantile plot for the 
-example data \code{eusilc} on the household level with the largest observation 
-replaced by an outlier. The plot is generated using the function 
-\code{paretoQPlot()}, which allows to supply sample weights via the argument 
-\code{w}. In addition, the threshold can be selected interactively by clicking 
-on a data point. Information on the selected threshold is then printed on the 
-\proglang{R} console. When the interactive selection is terminated, which is 
-typically done by a secondary mouse click, the selected threshold is returned 
-as an object of class \code{"paretoScale"}. 
+Figure~\ref{fig:ParetoQuantile} displays the Pareto quantile plot for the
+example data \code{eusilc} on the household level with the largest observation
+replaced by an outlier. The plot is generated using the function
+\code{paretoQPlot()}, which allows to supply sample weights via the argument
+\code{w}. In addition, the threshold can be selected interactively by clicking
+on a data point. Information on the selected threshold is then printed on the
+\proglang{R} console. When the interactive selection is terminated, which is
+typically done by a secondary mouse click, the selected threshold is returned
+as an object of class \code{"paretoScale"}.
 
-Another advantage of the Pareto quantile plot is also illustrated in 
-Figure~\ref{fig:ParetoQuantile}. Nonrepresentative outliers such as the large 
-income introduced into the example data in Section~\ref{sec:Pareto}, i.e., 
-extreme observations in the upper tail that deviate from the Pareto model, are 
+Another advantage of the Pareto quantile plot is also illustrated in
+Figure~\ref{fig:ParetoQuantile}. Nonrepresentative outliers such as the large
+income introduced into the example data in Section~\ref{sec:Pareto}, i.e.,
+extreme observations in the upper tail that deviate from the Pareto model, are
 clearly visible.
 
 \begin{figure}
@@ -494,7 +491,7 @@ clearly visible.
 <<fig=TRUE, width=5.5, height=5.5>>=
 paretoQPlot(eusilcH$eqIncome, w = eusilcH$db090)
 @
-\caption{Pareto Quantile plot for the example data \code{eusilc} on the 
+\caption{Pareto Quantile plot for the example data \code{eusilc} on the
 household level with the largest observation replaced by an outlier.}
 \label{fig:ParetoQuantile}
 \end{center}
@@ -502,38 +499,38 @@ household level with the largest observation replaced by an outlier.}
 
 
 \subsection{Mean excess plot}
-The \emph{mean excess plot} is another graphical method for inspecting the 
-threshold for Pareto tail modeling, but it does not provide information on the 
+The \emph{mean excess plot} is another graphical method for inspecting the
+threshold for Pareto tail modeling, but it does not provide information on the
 shape parameter. It is based on the excess function
 \begin{equation} \label{eq:excess}
 e(x_{0}) := \mathbb{E}(x - x_{0}|x > x_{0}), \qquad x_{0} \geq 0.
 \end{equation}
-A detailed description for the case without sample weights can be found in 
+A detailed description for the case without sample weights can be found in
 \citet{borkovec00}.
 
-For the following definition of the mean excess plot, keep in mind that the 
-observations are sorted such that $x_{1} \leq \ldots \leq x_{n}$. For each 
-observation $x_{i}$, $i = 1, \ldots, \lfloor n-\sqrt{n} \rfloor$, the empirical 
-excess function $e_{n}$ is computed. In the case without sample weights, the 
-expectation in Equation~(\ref{eq:excess}) is replaced by the arithmetic mean, 
+For the following definition of the mean excess plot, keep in mind that the
+observations are sorted such that $x_{1} \leq \ldots \leq x_{n}$. For each
+observation $x_{i}$, $i = 1, \ldots, \lfloor n-\sqrt{n} \rfloor$, the empirical
+excess function $e_{n}$ is computed. In the case without sample weights, the
+expectation in Equation~(\ref{eq:excess}) is replaced by the arithmetic mean,
 and the empirical excess function is given by
 \begin{equation}
-e_{n}(x_{i}) := \frac{1}{n-i} \sum_{j=i+1}^{n} (x_{j} - x_{i}), \qquad i = 1, 
+e_{n}(x_{i}) := \frac{1}{n-i} \sum_{j=i+1}^{n} (x_{j} - x_{i}), \qquad i = 1,
 \ldots, \lfloor n-\sqrt{n} \rfloor.
 \end{equation}
-The values of the empirical excess function $e_{n}(x_{i})$ are then plotted 
-against the corresponding $x_{i}$, $i = 1, \ldots, \lfloor n-\sqrt{n} \rfloor$. 
-If sample weights are available in the data, the mean excess plot is simply 
+The values of the empirical excess function $e_{n}(x_{i})$ are then plotted
+against the corresponding $x_{i}$, $i = 1, \ldots, \lfloor n-\sqrt{n} \rfloor$.
+If sample weights are available in the data, the mean excess plot is simply
 generalized by using the weighted mean for the empirical excess function:
 \begin{equation}
-e_{n}(x_{i}) := \frac{1}{\sum_{j=i+1}^{n} w_{j}} \sum_{j=i+1}^{n} w_{j} 
+e_{n}(x_{i}) := \frac{1}{\sum_{j=i+1}^{n} w_{j}} \sum_{j=i+1}^{n} w_{j}
 (x_{j} - x_{i}), \qquad i = 1, \ldots, \lfloor n-\sqrt{n} \rfloor.
 \end{equation}
 
-If the tail of the data follows a Pareto distribution, those observations show 
-a positive linear trend. The leftmost point of a fitted line can thus be used 
-as an estimate of the threshold $x_{0}$, the scale parameter. As for the Pareto 
-quantile plot, a disadvantage of the mean excess plot is that the threshold 
+If the tail of the data follows a Pareto distribution, those observations show
+a positive linear trend. The leftmost point of a fitted line can thus be used
+as an estimate of the threshold $x_{0}$, the scale parameter. As for the Pareto
+quantile plot, a disadvantage of the mean excess plot is that the threshold
 cannot be determined exactly.
 
 \begin{figure}
@@ -542,18 +539,18 @@ cannot be determined exactly.
 <<fig=TRUE, width=5.5, height=5.5>>=
 meanExcessPlot(eusilcH$eqIncome, w = eusilcH$db090)
 @
-\caption{Mean excess plot for the example data \code{eusilc} on the household 
+\caption{Mean excess plot for the example data \code{eusilc} on the household
 level with the largest observation replaced by an outlier.}
 \label{fig:meanExcess}
 \end{center}
 \end{figure}
 
-Figure~\ref{fig:meanExcess} shows the mean excess plot for the example data 
-\code{eusilc} on the household level with the largest observation replaced by 
-an outlier. The function \code{meanExcessPlot()} is thereby used to produce the 
-plot. Sample weights can be supplied via the argument \code{w}. Interactive 
-selection of the threshold works just like for the Pareto quantile plot. Again, 
-the selected threshold is returned as an object of class \code{"paretoScale"}. 
+Figure~\ref{fig:meanExcess} shows the mean excess plot for the example data
+\code{eusilc} on the household level with the largest observation replaced by
+an outlier. The function \code{meanExcessPlot()} is thereby used to produce the
+plot. Sample weights can be supplied via the argument \code{w}. Interactive
+selection of the threshold works just like for the Pareto quantile plot. Again,
+the selected threshold is returned as an object of class \code{"paretoScale"}.
 
 
 % ---------------
@@ -562,9 +559,9 @@ the selected threshold is returned as an object of class \code{"paretoScale"}.
 
 \section{Estimation of the shape parameter} \label{sec:shape}
 
-This section is focused on methods for estimating the shape parameter $\theta$ 
-once the threshold $x_0$ is fixed. It should be noted that none of the original 
-proposals takes sample weights into account. Most estimators presented in the 
+This section is focused on methods for estimating the shape parameter $\theta$
+once the threshold $x_0$ is fixed. It should be noted that none of the original
+proposals takes sample weights into account. Most estimators presented in the
 following were therefore adjusted for the case of sample weights.
 
 
@@ -584,12 +581,12 @@ given by generalizing Equation~(\ref{eq:Hill}) to
 1}^{k} w_{n-k+i} \left( \log x_{n-k+i} - \log x_{n-k} \right)} .
 \end{equation}
 
-Package \pkg{laeken} provides the function \code{thetaHill()} to compute the 
-Hill estimator. It requires to specify either the number of observations in 
-the tail via the argument \code{k}, or the threshold via the argument 
-\code{x0}. Furthermore, the argument \code{w} can be used to supply sample 
-weights. In the following example, the shape parameter is estimated using the 
-largest observations (first command) and the threshold (second command) as 
+Package \pkg{laeken} provides the function \code{thetaHill()} to compute the
+Hill estimator. It requires to specify either the number of observations in
+the tail via the argument \code{k}, or the threshold via the argument
+\code{x0}. Furthermore, the argument \code{w} can be used to supply sample
+weights. In the following example, the shape parameter is estimated using the
+largest observations (first command) and the threshold (second command) as
 computed with van Kerm's rule of thumb in Section~\ref{sec:vanKerm}.
 
 <<>>=
@@ -599,8 +596,8 @@ thetaHill(eusilcH$eqIncome, x0 = ts$x0, w = eusilcH$db090)
 
 
 \subsection{Weighted maximum likelihood estimator}
-The \emph{weighted maximum likelihood} (WML) estimator \citep{dupuis02, 
-dupuis06} falls into the class of M-estimators and is given by the solution 
+The \emph{weighted maximum likelihood} (WML) estimator \citep{dupuis02,
+dupuis06} falls into the class of M-estimators and is given by the solution
 $\hat{\theta}$ of
 \begin{equation}
 \sum_{i = 1}^{k} \mathrm{\Psi}(x_{n-k+i}, \theta) = 0
@@ -611,9 +608,9 @@ with
 f(x, \theta) = u(x, \theta) \left( \frac{1}{\theta} - \log \frac{x}{x_{0}}
 \right),
 \end{equation}
-where $u(x, \theta)$ is a weight function with values in $[0,1]$. In the 
-implementation in package \pkg{laeken}, a Huber type weight function is used by 
-default, as proposed by \citet{dupuis06}. Let the logarithms of the relative 
+where $u(x, \theta)$ is a weight function with values in $[0,1]$. In the
+implementation in package \pkg{laeken}, a Huber type weight function is used by
+default, as proposed by \citet{dupuis06}. Let the logarithms of the relative
 excesses be denoted by
 \begin{equation}
 z_{i} := \log \left( \frac{x_{n-k+i}}{x_{n-k}} \right), \qquad i = 1, \ldots, k.
@@ -657,18 +654,18 @@ This term is used to obtain a bias-corrected estimator
 \begin{equation}
 \tilde{\theta} := \hat{\theta} - \hat{B}(\hat{\theta}).
 \end{equation}
-For details and proofs of the above statements, as well as for information on 
-a probability-based weight function $u(x, \theta)$, the reader is referred to 
-\citet{dupuis02} and \citet{dupuis06}. However, note the WML estimator does not 
-consider sample weights. An adjustment of the estimator to take sample weights 
-into account is currently not available due to its complexity. For sampling 
-designs that lead to equal sample weights, the WML estimator may still be 
+For details and proofs of the above statements, as well as for information on
+a probability-based weight function $u(x, \theta)$, the reader is referred to
+\citet{dupuis02} and \citet{dupuis06}. However, note the WML estimator does not
+consider sample weights. An adjustment of the estimator to take sample weights
+into account is currently not available due to its complexity. For sampling
+designs that lead to equal sample weights, the WML estimator may still be
 useful, though.
 
-The function \code{thetaWML()} is available in \pkg{laeken} to compute the WML 
-estimator. Again, either the argument \code{k} or \code{x0} needs to be used to 
-specify the number of observations in the tail or the threshold. Since the 
-sample weights in the example data are not equal, the following example is only 
+The function \code{thetaWML()} is available in \pkg{laeken} to compute the WML
+estimator. Again, either the argument \code{k} or \code{x0} needs to be used to
+specify the number of observations in the tail or the threshold. Since the
+sample weights in the example data are not equal, the following example is only
 included to demonstrate the use of the function.
 
 <<>>=
@@ -680,31 +677,31 @@ thetaWML(eusilcH$eqIncome, x0 = ts$x0)
 \subsection{Integrated squared error estimator}
 
 For the \emph{integrated squared error} (ISE) estimator \citep{vandewalle07},
-the Pareto distribution is modeled in terms of the relative excesses 
+the Pareto distribution is modeled in terms of the relative excesses
 \begin{equation}
 y_{i} := \frac{x_{n-k+i}}{x_{n-k}}, \qquad i = 1, \ldots, k.
-\end{equation} 
+\end{equation}
 The density function of the Pareto distribution for the relative excesses is
 approximated by
 \begin{equation}
 f_{\theta}(y) = \theta y^{-(1+\theta)}.
 \end{equation}
-The ISE estimator is then given by minimizing the integrated squared error 
+The ISE estimator is then given by minimizing the integrated squared error
 criterion \citep{terrell90}:
 \begin{equation}
-\hat{\theta} = \arg \min_{\theta} \left[ \int f_{\theta}^{2}(y) dy - 2 
+\hat{\theta} = \arg \min_{\theta} \left[ \int f_{\theta}^{2}(y) dy - 2
 \mathbb{E}(f_{\theta}(Y)) \right] .
 \end{equation}
-If there are no sample weights in the data, the mean is used as an unbiased 
+If there are no sample weights in the data, the mean is used as an unbiased
 estimator of $\mathbb{E}(f_{\theta}(Y))$ in order to obtain the ISE estimate
 \begin{equation} \label{eq:ISE}
 \hat{\theta}_{\mathrm{ISE}} = \arg \min_{\theta} \left[ \int f_{\theta}^{2}(y)
 dy - \frac{2}{k} \sum_{i=1}^{k} f_{\theta}(y_{i}) \right] .
-\end{equation} 
-See \citet{vandewalle07} for more information on the ISE estimator for the case 
+\end{equation}
+See \citet{vandewalle07} for more information on the ISE estimator for the case
 without sample weights.
 
-If sample weights are available in the data, the mean in Equation~(\ref{eq:ISE}) 
+If sample weights are available in the data, the mean in Equation~(\ref{eq:ISE})
 is simply replaced by a weighted mean to obtain the \emph{weighted integrated
 squared error} (wISE) estimator:
 \begin{equation} \label{eq:wISE}
@@ -713,9 +710,9 @@ dy - \frac{2}{\sum_{i=1}^{k} w_{n-k+i}} \sum_{i=1}^{k} w_{n-k+i}
 f_{\theta}(y_{i}) \right] .
 \end{equation}
 
-With package \pkg{laeken}, the ISE estimator can be computed using the function 
-\code{thetaISE()}. The arguments \code{k} and \code{x0} are available to 
-specify either the number of observations in the tail or the threshold, and 
+With package \pkg{laeken}, the ISE estimator can be computed using the function
+\code{thetaISE()}. The arguments \code{k} and \code{x0} are available to
+specify either the number of observations in the tail or the threshold, and
 sample weights can be supplied via the argument \code{w}.
 
 <<>>=
@@ -754,10 +751,10 @@ w_{n-k+i} f_{\theta}(y_{i}) \right] , \\
 f_{\hat{\theta}}(y_{i})}{\int f_{\hat{\theta}}^{2}(y) dy} .
 \end{align}
 
-The function \code{thetaPDC()} is implemented in package \pkg{laeken} to 
-compute the PDC estimator. As for the other estimators, it is necessary to 
-specify either the number of observations in the tail via the argument 
-\code{k}, or the threshold via the argument \code{x0}. Sample weights can be 
+The function \code{thetaPDC()} is implemented in package \pkg{laeken} to
+compute the PDC estimator. As for the other estimators, it is necessary to
+specify either the number of observations in the tail via the argument
+\code{k}, or the threshold via the argument \code{x0}. Sample weights can be
 supplied using the argument \code{w}.
 
 <<>>=
@@ -773,66 +770,66 @@ thetaPDC(eusilcH$eqIncome, x0 = ts$x0, w = eusilcH$db090)
 \section{Estimation of the indicators using Pareto tail modeling}
 \label{sec:fit}
 
-Three approaches based on Pareto tail modeling for reducing the influence of 
-outliers on the social exclusion indicators are implemented in the \proglang{R} 
+Three approaches based on Pareto tail modeling for reducing the influence of
+outliers on the social exclusion indicators are implemented in the \proglang{R}
 package \pkg{laeken}:
 \begin{description}
   \item[Calibration for nonrepresentative outliers (CN):] Values larger than a
-  certain quantile of the fitted distribution are declared as nonrepresentative 
-  outliers. Since these are considered to be unique to the population data, the 
-  sample weights of the corresponding observations are set to $1$ and the 
-  weights of the remaining observations are adjusted accordingly by 
+  certain quantile of the fitted distribution are declared as nonrepresentative
+  outliers. Since these are considered to be unique to the population data, the
+  sample weights of the corresponding observations are set to $1$ and the
+  weights of the remaining observations are adjusted accordingly by
   calibration.
   \item[Replacement of nonrepresentative outliers (RN):] Values larger than a
-  certain quantile of the fitted distribution are declared as nonrepresentative 
-  outliers. Only these nonrepresentative outliers are replaced by values drawn 
-  from the fitted distribution, thereby preserving the order of the original 
+  certain quantile of the fitted distribution are declared as nonrepresentative
+  outliers. Only these nonrepresentative outliers are replaced by values drawn
+  from the fitted distribution, thereby preserving the order of the original
   values.
   \item[Replacement of the tail (RT):] All values above the threshold are
   replaced by values drawn from the fitted distribution. The order of the
   original values is preserved.
 \end{description}
-An evaluation of the RT approach by means of a simulation study can be found in 
+An evaluation of the RT approach by means of a simulation study can be found in
 \citet{alfons10b}.
 
-Keep in mind that the largest observation in the example data \code{eusilc} was 
-replaced by a large outlier in Section~\ref{sec:Pareto}. With the following 
-command, the Gini coefficient is estimated according to the Eurostat definition 
-to show that even a single outlier can completely distort the results for the 
+Keep in mind that the largest observation in the example data \code{eusilc} was
+replaced by a large outlier in Section~\ref{sec:Pareto}. With the following
+command, the Gini coefficient is estimated according to the Eurostat definition
+to show that even a single outlier can completely distort the results for the
 standard estimation (see Section~\ref{sec:Gini} for the original value).
 <<>>=
 gini("eqIncome", weights = "rb050", data = eusilc)
 @
 
-For Pareto tail modeling, the function \code{paretoTail()} is implemented in 
-\pkg{laeken}. It returns an object of class \code{"paretoTail"}, which contains 
-all the necessary information for further analysis using the three approaches 
-described above. Note that the household IDs are supplied via the argument 
-\code{groups} such that the Pareto distribution is fitted on the household 
-level rather than the individual level. In addition, the PDC is used by default 
-to estimate the shape parameter. Other estimators can be specified via the 
+For Pareto tail modeling, the function \code{paretoTail()} is implemented in
+\pkg{laeken}. It returns an object of class \code{"paretoTail"}, which contains
+all the necessary information for further analysis using the three approaches
+described above. Note that the household IDs are supplied via the argument
+\code{groups} such that the Pareto distribution is fitted on the household
+level rather than the individual level. In addition, the PDC is used by default
+to estimate the shape parameter. Other estimators can be specified via the
 \code{method} argument.
 <<>>=
-fit <- paretoTail(eusilc$eqIncome, k = ts$k, 
+fit <- paretoTail(eusilc$eqIncome, k = ts$k,
     w = eusilc$db090, groups = eusilc$db030)
 @
 
-The function \code{reweightOut()} is available for semiparametric estimation 
-with the CN approach. It returns a vector of the recalibrated weights. In this 
-example, regional information is used as auxiliary variables for calibration. 
-The function \code{calibVars()} thereby transforms a factor into a matrix of 
-binary variables, as required by the calibration function \code{calibWeights()}, 
-which is called internally. These recalibrated weights are then simply used to 
+The function \code{reweightOut()} is available for semiparametric estimation
+with the CN approach. It returns a vector of the recalibrated weights. In this
+example, regional information is used as auxiliary variables for calibration.
+The function \code{calibVars()} thereby transforms a factor into a matrix of
+binary variables, as required by the calibration function \code{calibWeights()},
+which is called internally. These recalibrated weights are then simply used to
 estimate the Gini coefficient with function \code{gini()}.
 <<>>=
 w <- reweightOut(fit, calibVars(eusilc$db040))
 gini(eusilc$eqIncome, w)
 @
 
-For the RN approach, the function \code{replaceOut()} is implemented. Since 
-values are drawn from the fitted distribution to replace the observations 
-flagged as outliers, the seed of the random number generator is set first for 
-reproducibility of the results. The returned vector of incomes is then supplied 
+For the RN approach, the function \code{replaceOut()} is implemented. Since
+values are drawn from the fitted distribution to replace the observations
+flagged as outliers, the seed of the random number generator is set first for
+reproducibility of the results. The returned vector of incomes is then supplied
 to \code{gini()} to estimate the Gini coefficient.
 <<>>=
 set.seed(1234)
@@ -840,23 +837,23 @@ eqIncome <- replaceOut(fit)
 gini(eqIncome, weights = eusilc$rb050)
 @
 
-Similarly, the function \code{replaceTail()} is available for the RT approach. 
+Similarly, the function \code{replaceTail()} is available for the RT approach.
 Again, the seed of the random number generator is set beforehand.
 <<>>=
 set.seed(1234)
 eqIncome <- replaceTail(fit)
 gini(eqIncome, weights = eusilc$rb050)
 @
-It should be noted that \code{replaceTail()} can also be used for the RN 
-approach by setting the argument \code{all} to \code{FALSE}. In fact, 
-\code{replaceOut(x, ...)} is a simple wrapper for \code{replaceTail(x, all = 
+It should be noted that \code{replaceTail()} can also be used for the RN
+approach by setting the argument \code{all} to \code{FALSE}. In fact,
+\code{replaceOut(x, ...)} is a simple wrapper for \code{replaceTail(x, all =
 FALSE, ...)}.
 
-In any case, the estimates for the semiparametric approaches based on Pareto 
-tail modeling are very close to the original value before the outlier has been 
-introduced (see Section~\ref{sec:Gini}), whereas the standard estimation is 
-corrupted by the outlier. Furthermore, the estimation of other indicators such 
-as the quintile share ratio (see Section~\ref{sec:QSR}) using the 
+In any case, the estimates for the semiparametric approaches based on Pareto
+tail modeling are very close to the original value before the outlier has been
+introduced (see Section~\ref{sec:Gini}), whereas the standard estimation is
+corrupted by the outlier. Furthermore, the estimation of other indicators such
+as the quintile share ratio (see Section~\ref{sec:QSR}) using the
 semiparametric approaches is straightforward and hence not shown here.
 
 
@@ -865,17 +862,17 @@ semiparametric approaches is straightforward and hence not shown here.
 % -----------
 
 \section{Conclusions} \label{sec:concl}
-This vignette shows the functionality of package \pkg{laeken} for robust 
-semiparametric estimation of social exclusion indicators based on Pareto tail 
-modeling. Most notably, it demonstrates that the functions are easy to use and 
-that the implementation follows an object-oriented design. While the focus of 
-the paper lies on the use of the package, a mathematical description of the 
+This vignette shows the functionality of package \pkg{laeken} for robust
+semiparametric estimation of social exclusion indicators based on Pareto tail
+modeling. Most notably, it demonstrates that the functions are easy to use and
+that the implementation follows an object-oriented design. While the focus of
+the paper lies on the use of the package, a mathematical description of the
 methods is given as well.
 
-Furthermore, it is shown that the standard estimation of the inequality 
-indicators can be corrupted by a single outlier, thus underlining the need for 
-robust alternatives. Three approaches for robust semiparametric estimation 
-based on Pareto tail modeling are thereby implemented such that the 
+Furthermore, it is shown that the standard estimation of the inequality
+indicators can be corrupted by a single outlier, thus underlining the need for
+robust alternatives. Three approaches for robust semiparametric estimation
+based on Pareto tail modeling are thereby implemented such that the
 corresponding functions share a common interface for ease of use.
 
 
@@ -887,7 +884,7 @@ corresponding functions share a common interface for ease of use.
 This work was partly funded by the European Union (represented by the European
 Commission) within the 7$^{\mathrm{th}}$ framework programme for research
 (Theme~8, Socio-Economic Sciences and Humanities, Project AMELI (Advanced
-Methodology for European Laeken Indicators), Grant Agreement No. 217322). Visit 
+Methodology for European Laeken Indicators), Grant Agreement No. 217322). Visit
 \url{http://ameli.surveystatistics.net} for more information on the project.
 
 
@@ -895,7 +892,7 @@ Methodology for European Laeken Indicators), Grant Agreement No. 217322). Visit
 % bibliography
 % ------------
 
-\bibliographystyle{plainnat}  
+\bibliographystyle{plainnat}
 \bibliography{laeken}
 
  \end{document}

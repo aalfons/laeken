@@ -4,8 +4,7 @@
 \alias{eqInc}
 \title{Equivalized disposable income}
 \usage{
-eqInc(hid, hplus, hminus, pplus, pminus, eqSS, year = NULL,
-  data = NULL)
+eqInc(hid, hplus, hminus, pplus, pminus, eqSS, year = NULL, data = NULL)
 }
 \arguments{
 \item{hid}{if \code{data=NULL}, a vector containing the household ID.

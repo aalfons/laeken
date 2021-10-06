@@ -4,8 +4,15 @@
 \alias{incQuintile}
 \title{Weighted income quintile}
 \usage{
-incQuintile(inc, weights = NULL, sort = NULL, years = NULL,
-  k = c(1, 4), data = NULL, na.rm = FALSE)
+incQuintile(
+  inc,
+  weights = NULL,
+  sort = NULL,
+  years = NULL,
+  k = c(1, 4),
+  data = NULL,
+  na.rm = FALSE
+)
 }
 \arguments{
 \item{inc}{either a numeric vector giving the (equivalized disposable)

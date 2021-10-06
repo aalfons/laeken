@@ -5,8 +5,15 @@
 \alias{print.paretoScale}
 \title{Estimate the scale parameter of a Pareto distribution}
 \usage{
-paretoScale(x, w = NULL, groups = NULL, method = "VanKerm",
-  center = c("mean", "median"), probs = c(0.97, 0.98), na.rm = FALSE)
+paretoScale(
+  x,
+  w = NULL,
+  groups = NULL,
+  method = "VanKerm",
+  center = c("mean", "median"),
+  probs = c(0.97, 0.98),
+  na.rm = FALSE
+)
 }
 \arguments{
 \item{x}{a numeric vector.}
@@ -63,8 +70,7 @@ paretoScale(eusilc$eqIncome, eusilc$db090, groups = eusilc$db030)
 \references{
 A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators
 from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of
-Statistical Software}, \bold{54}(15), 1--25.  URL
-\url{http://www.jstatsoft.org/v54/i15/}
+Statistical Software}, \bold{54}(15), 1--25.  \doi{10.18637/jss.v054.i15}
 
 Van Kerm, P. (2007) Extreme incomes and the estimation of poverty and
 inequality indicators from EU-SILC. IRISS Working Paper Series 2007-01,

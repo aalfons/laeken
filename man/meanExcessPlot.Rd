@@ -4,9 +4,17 @@
 \alias{meanExcessPlot}
 \title{Mean excess plot}
 \usage{
-meanExcessPlot(x, w = NULL, probs = NULL, interactive = TRUE,
-  pch = par("pch"), cex = par("cex"), col = par("col"),
-  bg = "transparent", ...)
+meanExcessPlot(
+  x,
+  w = NULL,
+  probs = NULL,
+  interactive = TRUE,
+  pch = par("pch"),
+  cex = par("cex"),
+  col = par("col"),
+  bg = "transparent",
+  ...
+)
 }
 \arguments{
 \item{x}{a numeric vector.}

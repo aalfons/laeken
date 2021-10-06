@@ -37,10 +37,9 @@
 #'
 #' @return A numeric vector containing the \emph{g}-weights.
 #'
-#' @note This is a faster implementation of parts of
-#' \code{\link[sampling]{calib}} from package \code{sampling}.  Note that the
-#' default calibration method is raking and that the truncated linear method is
-#' not yet implemented.
+#' @note This is a faster implementation of parts of \code{calib} from
+#' package \code{sampling}.  Note that the default calibration method is
+#' raking and that the truncated linear method is not yet implemented.
 #'
 #' @author Andreas Alfons
 #'

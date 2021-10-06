@@ -4,8 +4,14 @@
 \alias{incMedian}
 \title{Weighted median income}
 \usage{
-incMedian(inc, weights = NULL, sort = NULL, years = NULL,
-  data = NULL, na.rm = FALSE)
+incMedian(
+  inc,
+  weights = NULL,
+  sort = NULL,
+  years = NULL,
+  data = NULL,
+  na.rm = FALSE
+)
 }
 \arguments{
 \item{inc}{either a numeric vector giving the (equivalized disposable)

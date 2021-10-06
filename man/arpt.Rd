@@ -4,8 +4,15 @@
 \alias{arpt}
 \title{At-risk-of-poverty threshold}
 \usage{
-arpt(inc, weights = NULL, sort = NULL, years = NULL, data = NULL,
-  p = 0.6, na.rm = FALSE)
+arpt(
+  inc,
+  weights = NULL,
+  sort = NULL,
+  years = NULL,
+  data = NULL,
+  p = 0.6,
+  na.rm = FALSE
+)
 }
 \arguments{
 \item{inc}{either a numeric vector giving the equivalized disposable income,
@@ -29,7 +36,7 @@ integer or a logical vector specifying the corresponding column of
 
 \item{data}{an optional \code{data.frame}.}
 
-\item{p}{a numeric vector of values in \eqn{[0,1]} giving the percentages of 
+\item{p}{a numeric vector of values in \eqn{[0,1]} giving the percentages of
 the weighted median to be used for the at-risk-of-poverty threshold.}
 
 \item{na.rm}{a logical indicating whether missing values should be removed.}

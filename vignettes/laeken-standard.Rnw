@@ -36,10 +36,8 @@
 \setlength{\footnotesep}{11pt}
 \footnotetext[1]{
   \begin{tabular}[t]{l}
-  Department of Statistics and Probability Theory, Vienna University of 
-  Technology\\
-  Methods Unit, Statistics Austria\\ 
-  E-mail: \href{mailto:templ@tuwien.ac.at}{templ@tuwien.ac.at}
+  Zurich University of Applied Sciences\\
+  E-mail: \href{mailto:matthias.templ@zhaw.ch}{matthias.templ@zhaw.ch}
   \end{tabular}
 }
 \footnotetext[2]{
@@ -57,14 +55,14 @@ options(prompt="R> ")
 
 
 \paragraph{Abstract}
-This vignette demonstrates the use of the \proglang{R} package \pkg{laeken} for 
-standard point estimation of indicators on social exclusion and poverty 
-according to the definitions by Eurostat. The package contains synthetically 
-generated data for the European Union Statistics on Income and Living 
-Conditions (EU-SILC), which is used in the code examples throughout the paper. 
-Furthermore, the basic object-oriented design of the package is discussed. Even 
-though the paper is focused on showing the functionality of package 
-\pkg{laeken}, it also provides a brief mathematical description of the 
+This vignette demonstrates the use of the \proglang{R} package \pkg{laeken} for
+standard point estimation of indicators on social exclusion and poverty
+according to the definitions by Eurostat. The package contains synthetically
+generated data for the European Union Statistics on Income and Living
+Conditions (EU-SILC), which is used in the code examples throughout the paper.
+Furthermore, the basic object-oriented design of the package is discussed. Even
+though the paper is focused on showing the functionality of package
+\pkg{laeken}, it also provides a brief mathematical description of the
 implemented indicators.
 
 
@@ -74,13 +72,13 @@ implemented indicators.
 
 \section{Introduction}
 
-The \emph{European Union Statistics on Income and Living Conditions} (EU-SILC) 
-is a panel survey conducted in EU member states and other European countries, 
+The \emph{European Union Statistics on Income and Living Conditions} (EU-SILC)
+is a panel survey conducted in EU member states and other European countries,
 and serves as basis for measuring risk-of-poverty and social cohesion in Europe.
-%and for evaluating the Lisbon~2010 strategy and for monitoring the 
-%Europe~2020 goals of the European Union. 
-A short overview of the $11$ most important indicators on social exclusion and 
-poverty according to \cite{EU-SILC04} %and \cite{EU-SILC09} 
+%and for evaluating the Lisbon~2010 strategy and for monitoring the
+%Europe~2020 goals of the European Union.
+A short overview of the $11$ most important indicators on social exclusion and
+poverty according to \cite{EU-SILC04} %and \cite{EU-SILC09}
 is given in the following.
 
 \paragraph{Primary indicators}
@@ -121,32 +119,32 @@ is given in the following.
 
 \paragraph{}
 
-Note that especially the Gini coefficient is very well studied due to its 
-importance in many fields of research. 
+Note that especially the Gini coefficient is very well studied due to its
+importance in many fields of research.
 
-The add-on package \pkg{laeken} \citep{laeken} aims is to bring 
-functionality for the estimation of indicators on social exclusion and poverty 
-to the statistical environment \proglang{R} \citep{RDev}. In the examples in 
-this vignette, standard estimates for the most important indicators are computed 
-according to the Eurostat definitions \citep{EU-SILC04, EU-SILC09}. More 
-sophisticated methods that are less influenced by outliers are described in 
-vignette \code{laeken-pareto} \citep{alfons11a}, while the basic framework for 
-variance estimation is discussed in vignette \code{laeken-variance} 
-\citep{templ11b}. Those documents can be viewed from within \proglang{R} with 
+The add-on package \pkg{laeken} \citep{laeken} aims is to bring
+functionality for the estimation of indicators on social exclusion and poverty
+to the statistical environment \proglang{R} \citep{RDev}. In the examples in
+this vignette, standard estimates for the most important indicators are computed
+according to the Eurostat definitions \citep{EU-SILC04, EU-SILC09}. More
+sophisticated methods that are less influenced by outliers are described in
+vignette \code{laeken-pareto} \citep{alfons11a}, while the basic framework for
+variance estimation is discussed in vignette \code{laeken-variance}
+\citep{templ11b}. Those documents can be viewed from within \proglang{R} with
 the following commands:
 <<eval=FALSE>>=
 vignette("laeken-pareto")
 vignette("laeken-variance")
 @
-Morover, a general introduction to package \pkg{laeken} is published as 
+Morover, a general introduction to package \pkg{laeken} is published as
 \citet{alfons13b}.
 
-The example data set of package \pkg{laeken}, which is called \code{eusilc} and 
-consists of $14\,827$ observations from $6\,000$ households, is used throughout 
-the paper. It was synthetically generated from Austrian EU-SILC survey data 
-from 2006 using the data simulation methodology proposed by \citet{alfons11c} 
-and implemented in the \proglang{R} package \pkg{simPopulation} \citep{simPopulation}. 
-The first three observations of the synthetic data set \code{eusilc} are 
+The example data set of package \pkg{laeken}, which is called \code{eusilc} and
+consists of $14\,827$ observations from $6\,000$ households, is used throughout
+the paper. It was synthetically generated from Austrian EU-SILC survey data
+from 2006 using the data simulation methodology proposed by \citet{alfons11c}
+and implemented in the \proglang{R} package \pkg{simPopulation} \citep{simPopulation}.
+The first three observations of the synthetic data set \code{eusilc} are
 printed below.
 
 <<>>=
@@ -155,38 +153,38 @@ data("eusilc")
 head(eusilc, 3)
 @
 
-Only a few of the large number of variables in the original survey are included 
-in the example data set. The variable names are rather cryptic codes, but these 
-are the standardized names used by the statistical agencies. Furthermore, the 
-variables \code{hsize} (household size), \code{age}, \code{eqSS} (equivalized 
-household size) and \code{eqIncome} (equivalized disposable income) are not 
-included in the standardized format of EU-SILC data, but have been derived from 
-other variables for convenience. Moreover, some very sparse income components 
-were not included in the the generation of this synthetic data set. Thus the 
+Only a few of the large number of variables in the original survey are included
+in the example data set. The variable names are rather cryptic codes, but these
+are the standardized names used by the statistical agencies. Furthermore, the
+variables \code{hsize} (household size), \code{age}, \code{eqSS} (equivalized
+household size) and \code{eqIncome} (equivalized disposable income) are not
+included in the standardized format of EU-SILC data, but have been derived from
+other variables for convenience. Moreover, some very sparse income components
+were not included in the the generation of this synthetic data set. Thus the
 equivalized household income is computed from the available income components.
 
-For the remainder of the paper, the variable \code{eqIncome} (equivalized 
-disposable income) is of main interest. Other variables are in some cases used 
-to break down the data in order to evaluate the indicators on the resulting 
+For the remainder of the paper, the variable \code{eqIncome} (equivalized
+disposable income) is of main interest. Other variables are in some cases used
+to break down the data in order to evaluate the indicators on the resulting
 subsets.
 
-It is important to note that EU-SILC data are in practice conducted through 
-complex sampling designs with different inclusion probabilities for the 
-observations in the population, which results in different weights for the 
-observations in the sample. Furthermore, calibration is typically performed for 
-non-response adjustment of these initial design weights. Therefore, the 
-sample weights have to be considered for all estimates, otherwise biased 
+It is important to note that EU-SILC data are in practice conducted through
+complex sampling designs with different inclusion probabilities for the
+observations in the population, which results in different weights for the
+observations in the sample. Furthermore, calibration is typically performed for
+non-response adjustment of these initial design weights. Therefore, the
+sample weights have to be considered for all estimates, otherwise biased
 results are obtained.
 
-The rest of the paper is organized as follows. Section \ref{sec:design} briefly 
-illustrates the basic object-oriented design of the package. The calculation of 
-the equivalized household size and the equivalized disposable income is then 
-described in Section \ref{sec:income}. Afterwards, Section~\ref{sec:w} 
-introduces the Eurostat definitions of the weighted median and weighted 
-quantiles, which are required for the estimation of some of the indicators. In 
-Section~\ref{sec:ind}, a mathematical description of the most important 
-indicators on social exclusion and poverty is given and their estimation with 
-package \pkg{laeken} is demonstrated. Section~\ref{sec:sub} discusses a useful 
+The rest of the paper is organized as follows. Section \ref{sec:design} briefly
+illustrates the basic object-oriented design of the package. The calculation of
+the equivalized household size and the equivalized disposable income is then
+described in Section \ref{sec:income}. Afterwards, Section~\ref{sec:w}
+introduces the Eurostat definitions of the weighted median and weighted
+quantiles, which are required for the estimation of some of the indicators. In
+Section~\ref{sec:ind}, a mathematical description of the most important
+indicators on social exclusion and poverty is given and their estimation with
+package \pkg{laeken} is demonstrated. Section~\ref{sec:sub} discusses a useful
 subsetting method, and Section~\ref{sec:concl} concludes.
 
 
@@ -197,10 +195,10 @@ subsetting method, and Section~\ref{sec:concl} concludes.
 \section{Basic design of the package}
 \label{sec:design}
 
-The implementation of the package follows an object-oriented design using 
-\proglang{S3} classes \citep{chambers92}. Its aim is to provide functionality 
-for point and variance estimation of Laeken indicators with a single command, 
-even for different years and domains. Currently, the following indicators are 
+The implementation of the package follows an object-oriented design using
+\proglang{S3} classes \citep{chambers92}. Its aim is to provide functionality
+for point and variance estimation of Laeken indicators with a single command,
+even for different years and domains. Currently, the following indicators are
 available in the \proglang{R} package \pkg{laeken}:
 \begin{itemize}
     \item \emph{At-risk-of-poverty rate}: function \code{arpr()}
@@ -211,20 +209,20 @@ available in the \proglang{R} package \pkg{laeken}:
 \end{itemize}
 Note that the implementation strictly follows the Eurostat definitions
 \citep{EU-SILC04,EU-SILC09}.
-%In addition, robust estimators are also implemented. Here, the focus is on 
+%In addition, robust estimators are also implemented. Here, the focus is on
 %Pareto tail modeling.
 
-  
+
 \subsection{Class structure}
-In this section, the class structure of package \pkg{laeken} is briefly 
-discussed. Section~\ref{sec:indicator} describes the basic class 
-\code{"indicator"}, while the different subclasses for the specific indicators 
+In this section, the class structure of package \pkg{laeken} is briefly
+discussed. Section~\ref{sec:indicator} describes the basic class
+\code{"indicator"}, while the different subclasses for the specific indicators
 are listed in Section~\ref{sec:classes}.
 
 
 \subsubsection{Class \code{"indicator"}} \label{sec:indicator}
-The basic class \code{"indicator"} acts as the superclass for all classes in 
-the package corresponding to specific indicators. It consists of the following 
+The basic class \code{"indicator"} acts as the superclass for all classes in
+the package corresponding to specific indicators. It consists of the following
 components:
 %
 \begin{description}
@@ -241,36 +239,36 @@ components:
 %  \item[\code{seed}:] The seed of the random number generator before the computations.
 \end{description}
 
-These list components are inherited by each indicator in the package. 
-One of the most important features of \pkg{laeken} is that indicators can be 
-evaluated for different years and domains. The latter of which can be regions 
-(e.g., NUTS2), but also any other breakdown given by a categorical variable 
+These list components are inherited by each indicator in the package.
+One of the most important features of \pkg{laeken} is that indicators can be
+evaluated for different years and domains. The latter of which can be regions
+(e.g., NUTS2), but also any other breakdown given by a categorical variable
 (see the examples in Section~\ref{sec:ind}).
 
-In any case, the advantage of the object-oriented implementation is the 
-possibility of sharing code among the indicators. To give an example, the 
-following methods for the basic class \code{"indicator"} are implemented in the 
+In any case, the advantage of the object-oriented implementation is the
+possibility of sharing code among the indicators. To give an example, the
+following methods for the basic class \code{"indicator"} are implemented in the
 package:
 <<>>=
 methods(class="indicator")
-@ 
-The \code{print()} and \code{subset()} methods are called by their respective 
-generic functions if an object inheriting from class \code{"indicator"} is 
-supplied. While the \code{print()} method defines the output of objects 
-inheriting from class \code{"indicator"} shown on the \proglang{R} console, the 
-\code{subset()} method allows to extract subsets of an object inheriting from 
+@
+The \code{print()} and \code{subset()} methods are called by their respective
+generic functions if an object inheriting from class \code{"indicator"} is
+supplied. While the \code{print()} method defines the output of objects
+inheriting from class \code{"indicator"} shown on the \proglang{R} console, the
+\code{subset()} method allows to extract subsets of an object inheriting from
 class \code{"indicator"} and is discussed in detail in Section~\ref{sec:sub}.
-Furthermore, the function \code{is.indicator()} is available to test whether an 
+Furthermore, the function \code{is.indicator()} is available to test whether an
 object is of class \code{"indicator"}.
 
 \subsubsection{Additional classes} \label{sec:classes}
-For the specific indicators on social exclusion and poverty, the following 
+For the specific indicators on social exclusion and poverty, the following
 classes are implemented in package \pkg{laeken}:
 %
 \begin{itemize}
   \item Class \code{"arpr"} with the following additional components:
   \begin{description}
-    \item[\code{p}:] The percentage of the weighted median used for the 
+    \item[\code{p}:] The percentage of the weighted median used for the
     at-risk-of-poverty threshold.
     \item[\code{threshold}:] The at-risk-of-poverty threshold(s).
   \end{description}
@@ -282,10 +280,10 @@ classes are implemented in package \pkg{laeken}:
   \item Class \code{"gini"} with no additional components.
 \end{itemize}
 %
-All these classes are subclasses of the basic class \code{"indicator"} and 
-therefore inherit all its components and methods. In addition, functions to 
-test whether an object is a member of one of these subclasses are implemented. 
-Similarly to \code{is.indicator()}, these are called \code{is.foo()}, where 
+All these classes are subclasses of the basic class \code{"indicator"} and
+therefore inherit all its components and methods. In addition, functions to
+test whether an object is a member of one of these subclasses are implemented.
+Similarly to \code{is.indicator()}, these are called \code{is.foo()}, where
 \code{foo} is the name of the respective class (e.g., \code{is.arpr()}).
 
 
@@ -297,66 +295,66 @@ Similarly to \code{is.indicator()}, these are called \code{is.foo()}, where
 \label{sec:income}
 
 For each person, the equivalized disposable income is defined as the total
-household disposable income divided by the equivalized household size. It 
-follows that each person in the same household receives the same equivalized 
+household disposable income divided by the equivalized household size. It
+follows that each person in the same household receives the same equivalized
 disposable income.
 
-The total disposable income of a household is calculated by adding together the 
-personal income received by all of the household members plus the income 
-received at the household level. The equivalized household size is defined 
-according to the modified OECD scale, which gives a weight of 1.0 to the first 
-adult, 0.5 to other household members aged 14 or over, and 0.3 to household 
+The total disposable income of a household is calculated by adding together the
+personal income received by all of the household members plus the income
+received at the household level. The equivalized household size is defined
+according to the modified OECD scale, which gives a weight of 1.0 to the first
+adult, 0.5 to other household members aged 14 or over, and 0.3 to household
 members aged less than 14 \citep{EU-SILC04, EU-SILC09}.
 
-In practice, the equivalized disposable income needs to be computed from the 
-income components included in EU-SILC for the estimation of the indicators on 
-social exclusion and poverty. Therefore, this section outlines how to perform 
-this step with package \pkg{laeken}, even though the variable \code{eqIncome} 
-containing the equivalized disposable income is already available in the 
-example data set \code{eusilc}. Note that not all variables that are required 
-for an exact computation of the equivalized income are included in the 
-synthetic example data. However, the functions of the package can be applied in 
+In practice, the equivalized disposable income needs to be computed from the
+income components included in EU-SILC for the estimation of the indicators on
+social exclusion and poverty. Therefore, this section outlines how to perform
+this step with package \pkg{laeken}, even though the variable \code{eqIncome}
+containing the equivalized disposable income is already available in the
+example data set \code{eusilc}. Note that not all variables that are required
+for an exact computation of the equivalized income are included in the
+synthetic example data. However, the functions of the package can be applied in
 exactly the same manner to real EU-SILC data.
- 
-First, the equivalized household size according to the modified OECD scale 
-needs to be computed. This can be done with the function \code{eqSS()}, which 
-requires the household ID and the age of the individuals as arguments. In the 
-example data, household~ID and age are stored in the variables \code{db030} 
-and \code{age}, respectively. It should be noted that the variable 
-\code{age} is not in the standardized format of EU-SILC data and needs to be 
-calculated from the data beforehand. Nevertheless, these computations are very 
-simple and are therefore not shown here \citep[for details, see][]{EU-SILC09}. 
-The following two lines of code calculate the equivalized household size, add 
-it to the data set, and print the first eight observations of the variables 
+
+First, the equivalized household size according to the modified OECD scale
+needs to be computed. This can be done with the function \code{eqSS()}, which
+requires the household ID and the age of the individuals as arguments. In the
+example data, household~ID and age are stored in the variables \code{db030}
+and \code{age}, respectively. It should be noted that the variable
+\code{age} is not in the standardized format of EU-SILC data and needs to be
+calculated from the data beforehand. Nevertheless, these computations are very
+simple and are therefore not shown here \citep[for details, see][]{EU-SILC09}.
+The following two lines of code calculate the equivalized household size, add
+it to the data set, and print the first eight observations of the variables
 involved.
 
 <<>>=
 eusilc$eqSS <- eqSS("db030", "age", data=eusilc)
 head(eusilc[,c("db030", "age", "eqSS")], 8)
 @
- 
-Then the equivalized disposable income can be computed with the function 
-\code{eqInc()}. It requires the following information to be supplied: the 
-household~ID, the household income components to be added and subtracted, 
-respectively, the personal income components to be  added and subtracted, 
-respectively, as well as the equivalized household size. With the following 
-commands, the equivalized disposable income is calculated and added to the data 
-set, after which the first eight observations of the important variables in 
+
+Then the equivalized disposable income can be computed with the function
+\code{eqInc()}. It requires the following information to be supplied: the
+household~ID, the household income components to be added and subtracted,
+respectively, the personal income components to be  added and subtracted,
+respectively, as well as the equivalized household size. With the following
+commands, the equivalized disposable income is calculated and added to the data
+set, after which the first eight observations of the important variables in
 this context are printed.
 
 <<>>=
 hplus <- c("hy040n", "hy050n", "hy070n", "hy080n", "hy090n", "hy110n")
 hminus <- c("hy130n", "hy145n")
-pplus <- c("py010n", "py050n", "py090n", "py100n", 
+pplus <- c("py010n", "py050n", "py090n", "py100n",
     "py110n", "py120n", "py130n", "py140n")
-eusilc$eqIncome <- eqInc("db030", hplus, hminus, 
+eusilc$eqIncome <- eqInc("db030", hplus, hminus,
     pplus, character(), "eqSS", data=eusilc)
-head(eusilc[,c("db030", "eqSS", "eqIncome")], 8)   
+head(eusilc[,c("db030", "eqSS", "eqIncome")], 8)
 @
 %
-Note that the net income is considered in this example, therefore no personal 
-income component needs to be subtracted \citep[see][]{EU-SILC04, EU-SILC09}. 
-This is reflected in the call to \code{eqInc()} by the use of an empty 
+Note that the net income is considered in this example, therefore no personal
+income component needs to be subtracted \citep[see][]{EU-SILC04, EU-SILC09}.
+This is reflected in the call to \code{eqInc()} by the use of an empty
 character vector \code{character()} for the corresponding argument.
 
 
@@ -367,69 +365,69 @@ character vector \code{character()} for the corresponding argument.
 \section{Weighted median and quantile estimation}
 \label{sec:w}
 
-Some of the indicators on social exclusion and poverty require the estimation 
-of the median income or other quantiles of the income distribution. Hence 
-functions that strictly follow the definitions according to \citet{EU-SILC04, 
-EU-SILC09} are implemented in package \pkg{laeken}. They are used internally 
-for the estimation of the respective indicators, but can also be called by the 
+Some of the indicators on social exclusion and poverty require the estimation
+of the median income or other quantiles of the income distribution. Hence
+functions that strictly follow the definitions according to \citet{EU-SILC04,
+EU-SILC09} are implemented in package \pkg{laeken}. They are used internally
+for the estimation of the respective indicators, but can also be called by the
 user directly.
 
-In the analysis of income distributions, the median income is typically of 
-higher interest than the arithmetic mean. This is because income distributions 
-commonly are strongly right-skewed with a heavy tail of \emph{representative 
-outliers} (correctly measured units that are not unique to the population) and 
-\emph{nonrepresentative outliers} (either measurement errors or correct 
-observations that can be considered unique in the population). Therefore, the 
-center of the distribution is more reliably estimated by a weighted median than 
+In the analysis of income distributions, the median income is typically of
+higher interest than the arithmetic mean. This is because income distributions
+commonly are strongly right-skewed with a heavy tail of \emph{representative
+outliers} (correctly measured units that are not unique to the population) and
+\emph{nonrepresentative outliers} (either measurement errors or correct
+observations that can be considered unique in the population). Therefore, the
+center of the distribution is more reliably estimated by a weighted median than
 by a weighted mean, as the latter is highly influenced by extreme values.
 
-In mathematical terms, quantiles are defined as $q_{p} := F^{-1}(p)$, 
-where $F$ is the distribution function on the population level and $0 \leq p 
-\leq 1$. The median as an important special case is given by $p = 0.5$. For the 
-following definitions, let $n$ be the number of observations in the sample, let 
-$\boldsymbol{x} := (x_{1}, \ldots, x_{n})'$ denote the equivalized disposable 
-income with \mbox{$x_{1} \leq \ldots \leq x_{n}$}, and let $\boldsymbol{w} := 
-(w_{i}, \ldots, w_{n})'$ be the corresponding personal sample weights. Weighted 
-quantiles for the estimation of the population values according to 
+In mathematical terms, quantiles are defined as $q_{p} := F^{-1}(p)$,
+where $F$ is the distribution function on the population level and $0 \leq p
+\leq 1$. The median as an important special case is given by $p = 0.5$. For the
+following definitions, let $n$ be the number of observations in the sample, let
+$\boldsymbol{x} := (x_{1}, \ldots, x_{n})'$ denote the equivalized disposable
+income with \mbox{$x_{1} \leq \ldots \leq x_{n}$}, and let $\boldsymbol{w} :=
+(w_{i}, \ldots, w_{n})'$ be the corresponding personal sample weights. Weighted
+quantiles for the estimation of the population values according to
 \citet{EU-SILC04, EU-SILC09} are then given by
 \begin{equation} \label{eq:wq}
-\hat{q}_{p} = \hat{q}_{p} (\boldsymbol{x}, \boldsymbol{w}) := 
+\hat{q}_{p} = \hat{q}_{p} (\boldsymbol{x}, \boldsymbol{w}) :=
 \begin{cases}
-  \frac{1}{2} (x_{j} + x_{j+1}), & \quad \text{if } \sum_{i=1}^{j} w_{i} = p 
+  \frac{1}{2} (x_{j} + x_{j+1}), & \quad \text{if } \sum_{i=1}^{j} w_{i} = p
                                \sum_{i=1}^{n} w_{i}, \\
-  x_{j+1}, & \quad \text{if } \sum_{i=1}^{j} w_{i} < p \sum_{i=1}^{n} w_{i} < 
+  x_{j+1}, & \quad \text{if } \sum_{i=1}^{j} w_{i} < p \sum_{i=1}^{n} w_{i} <
              \sum_{i=1}^{j+1} w_{i}.
 \end{cases}
 \end{equation}
 
-This definition of weighted quantiles is available in \pkg{laeken} through the 
-function \code{weightedQuantile()}. The following command computes the weighed 
-20\% quantile, the weighted median, and the weighted 80\% quantile. In the 
+This definition of weighted quantiles is available in \pkg{laeken} through the
+function \code{weightedQuantile()}. The following command computes the weighed
+20\% quantile, the weighted median, and the weighted 80\% quantile. In the
 context of social exclusion indicators, these are of most importance.
 % -----
 <<keep.source=TRUE>>=
-weightedQuantile(eusilc$eqIncome, eusilc$rb050, 
+weightedQuantile(eusilc$eqIncome, eusilc$rb050,
     probs = c(0.2, 0.5, 0.8))
 @
 % -----
-For the important special case of the weighted median, the function 
+For the important special case of the weighted median, the function
 \code{weightedMedian()} is available for convenience.
 % -----
 <<>>=
 weightedMedian(eusilc$eqIncome, eusilc$rb050)
 @
 
-In addition, the functions \code{incMedian()} and \code{incQuintile()} are more 
-tailored towards application in the case of indicators on social exclusion and 
-poverty and provide a similar interface as the functions for the indicators 
-(see Section~\ref{sec:ind}). In particular, they allow to supply an additional 
-variable to be used as tie-breakers for sorting, and to compute the weighted 
-median and income quintiles, respectively, for several years of the survey. 
-With the following lines of code, the median income as well as the 
-\engordnumber{1} and \engordnumber{4} income quintile (i.e., the weighted 20\% 
+In addition, the functions \code{incMedian()} and \code{incQuintile()} are more
+tailored towards application in the case of indicators on social exclusion and
+poverty and provide a similar interface as the functions for the indicators
+(see Section~\ref{sec:ind}). In particular, they allow to supply an additional
+variable to be used as tie-breakers for sorting, and to compute the weighted
+median and income quintiles, respectively, for several years of the survey.
+With the following lines of code, the median income as well as the
+\engordnumber{1} and \engordnumber{4} income quintile (i.e., the weighted 20\%
 and 80\% quantiles) are estimated.
 <<>>=
-incMedian("eqIncome", weights = "rb050", data = eusilc) 
+incMedian("eqIncome", weights = "rb050", data = eusilc)
 incQuintile("eqIncome", weights = "rb050", k = c(1, 4), data = eusilc)
 @
 
@@ -441,28 +439,28 @@ incQuintile("eqIncome", weights = "rb050", k = c(1, 4), data = eusilc)
 \section{Indicators on social exclusion and poverty}
 \label{sec:ind}
 
-In this section, the most important indicators on social exclusion and poverty 
-are described in detail. Furthermore, the functionality of package \pkg{laeken} 
+In this section, the most important indicators on social exclusion and poverty
+are described in detail. Furthermore, the functionality of package \pkg{laeken}
 to estimate these indicators is demonstrated.
 
-It should be noted that all functions for the implemented indicators provide a 
-very similar interface. Most importantly, it is possible to compute estimates 
-for several years of the survey and different subdomains with a single command. 
-Furthermore, the functions allow to supply an additional variable to be used as 
-tie-breakers for sorting. However, not all of the implemented functionality is 
-shown in this vignette. For a complete description of the functions and their 
+It should be noted that all functions for the implemented indicators provide a
+very similar interface. Most importantly, it is possible to compute estimates
+for several years of the survey and different subdomains with a single command.
+Furthermore, the functions allow to supply an additional variable to be used as
+tie-breakers for sorting. However, not all of the implemented functionality is
+shown in this vignette. For a complete description of the functions and their
 arguments, the reader is referred to the corresponding \proglang{R} help pages.
 
-In addition, only point estimation of the indicators on social exclusion and 
-poverty is illustrated here, statistical significance of these estimates is not 
-discussed. The functionality for variance estimation of the indicators is 
-described in the package vignette \code{laeken-variance} \citep{templ11b}. 
+In addition, only point estimation of the indicators on social exclusion and
+poverty is illustrated here, statistical significance of these estimates is not
+discussed. The functionality for variance estimation of the indicators is
+described in the package vignette \code{laeken-variance} \citep{templ11b}.
 
-For the following definitions of the estimators according to \citet{EU-SILC04, 
-EU-SILC09}, let $\boldsymbol{x} := (x_{1}, \ldots, x_{n})'$ be the equivalized 
-disposable income with $x_{1} \leq \ldots \leq x_{n}$ and let $\boldsymbol{w} 
-:= (w_{i}, \ldots, w_{n})'$ be the corresponding personal sample weights, 
-where $n$ denotes the number of observations. Furthermore, define the following 
+For the following definitions of the estimators according to \citet{EU-SILC04,
+EU-SILC09}, let $\boldsymbol{x} := (x_{1}, \ldots, x_{n})'$ be the equivalized
+disposable income with $x_{1} \leq \ldots \leq x_{n}$ and let $\boldsymbol{w}
+:= (w_{i}, \ldots, w_{n})'$ be the corresponding personal sample weights,
+where $n$ denotes the number of observations. Furthermore, define the following
 index sets for a certain threshold $t$:
 \begin{align}
 I_{< t} &:= \{ i \in \{ 1, \ldots, n \} : x_{i} < t \},\label{eq:01-Ilt}\\
@@ -474,32 +472,32 @@ I_{> t} &:= \{ i \in \{ 1, \ldots, n \} : x_{i} > t\}\label{eq:01-Igt}.
 \subsection{At-risk-at-poverty rate} \label{sec:ARPR}
 In order to define the \emph{at-risk-of-poverty rate} (ARPR), the
 \emph{at-risk-of-poverty threshold} (ARPT) needs to be introduced first,
-which is set at $60\%$ of the national median equivalized disposable income. 
-Then the at-risk-at-poverty rate is defined as the proportion of persons with 
-an equivalized disposable income below the at-risk-at-poverty threshold 
-\citep{EU-SILC04, EU-SILC09}. In a more mathematical notation, the 
+which is set at $60\%$ of the national median equivalized disposable income.
+Then the at-risk-at-poverty rate is defined as the proportion of persons with
+an equivalized disposable income below the at-risk-at-poverty threshold
+\citep{EU-SILC04, EU-SILC09}. In a more mathematical notation, the
 at-risk-at-poverty rate is defined as
 \begin{equation} \label{eq:ARPR}
 ARPR := P(x < 0.6 \cdot q_{0.5}) \cdot 100,% = F(0.6 \cdot q_{0.5}) \cdot 100,
 \end{equation}
-where $q_{0.5} := F^{-1}(0.5)$ denotes the population median (50\% quantile) 
-and $F$ is the distribution function of the equivalized income on the 
+where $q_{0.5} := F^{-1}(0.5)$ denotes the population median (50\% quantile)
+and $F$ is the distribution function of the equivalized income on the
 population level.
 
-For the estimation of the at-risk-at-poverty rate from a sample, the sample 
+For the estimation of the at-risk-at-poverty rate from a sample, the sample
 weights need to be taken into account.
-%Let $n$ be the number of observations in the sample, let $\boldsymbol{x} := 
-%(x_{1}, \ldots, x_{n})'$ denote the equivalized disposable income with 
-%\mbox{$x_{1} \leq \ldots \leq x_{n}$}, and let $\boldsymbol{w} := (w_{i}, 
-%\ldots, w_{n})'$ be the corresponding personal sample weights. Then the 
+%Let $n$ be the number of observations in the sample, let $\boldsymbol{x} :=
+%(x_{1}, \ldots, x_{n})'$ denote the equivalized disposable income with
+%\mbox{$x_{1} \leq \ldots \leq x_{n}$}, and let $\boldsymbol{w} := (w_{i},
+%\ldots, w_{n})'$ be the corresponding personal sample weights. Then the
 %at-risk-at-poverty threshold is estimated by
 First, the at-risk-at-poverty threshold is estimated by
 \begin{equation} \label{eq:ARPT}
 \widehat{ARPT} = 0.6 \cdot \hat{q}_{0.5},
 \end{equation}
-where $\hat{q}_{0.5}$ is the weighted median as defined in 
-Equation~(\ref{eq:wq}). 
-%Furthermore, define an index set of observations with an equivalized disposable 
+where $\hat{q}_{0.5}$ is the weighted median as defined in
+Equation~(\ref{eq:wq}).
+%Furthermore, define an index set of observations with an equivalized disposable
 %income below the estimated at-risk-at-poverty threshold as
 %\begin{equation}
 %I_{< \widehat{ARPT}} := \{ i \in \{ 1, \ldots, n \} : x_{i} < \widehat{ARPT} \}.
@@ -507,18 +505,18 @@ Equation~(\ref{eq:wq}).
 %With these definitions, the at-risk-at-poverty rate can be estimated by
 Then the at-risk-at-poverty rate can be estimated by
 \begin{equation}
-\widehat{ARPR} := \frac{\sum_{i \in I_{< \widehat{ARPT}}} w_{i}}{\sum_{i=1}^{n} 
-w_{i}} \cdot 100, 
+\widehat{ARPR} := \frac{\sum_{i \in I_{< \widehat{ARPT}}} w_{i}}{\sum_{i=1}^{n}
+w_{i}} \cdot 100,
 \end{equation}
-where $I_{< \widehat{ARPT}}$ is an index set of persons with an equivalized 
-disposable income below the estimated at-risk-of-poverty threshold as defined 
+where $I_{< \widehat{ARPT}}$ is an index set of persons with an equivalized
+disposable income below the estimated at-risk-of-poverty threshold as defined
 in Equation~(\ref{eq:01-Ilt}).
 
-In package \pkg{laeken}, the functions \code{arpt()} and \code{arpr()} are 
-implemented for the estimation of the at-risk-of-poverty threshold and the 
-at-risk-of-poverty rate. Whenever sample weights are available in the data, 
-they should be supplied as the \code{weights} argument. Even though 
-\code{arpt()} is called internally by \code{arpr()}, it can also be called by 
+In package \pkg{laeken}, the functions \code{arpt()} and \code{arpr()} are
+implemented for the estimation of the at-risk-of-poverty threshold and the
+at-risk-of-poverty rate. Whenever sample weights are available in the data,
+they should be supplied as the \code{weights} argument. Even though
+\code{arpt()} is called internally by \code{arpr()}, it can also be called by
 the user directly.
 <<>>=
 arpt("eqIncome", weights = "rb050", data = eusilc)
@@ -526,10 +524,10 @@ arpr("eqIncome", weights = "rb050", data = eusilc)
 @
 
 It is also possible to use these functions for the estimation of the indicator
-\emph{dispersion around the at-risk-of-poverty threshold}, which is defined as 
+\emph{dispersion around the at-risk-of-poverty threshold}, which is defined as
 the proportion of persons with an equivalized disposable income
-below $40\%$, $50\%$ and $70\%$ of the national weighted median equivalized 
-disposable income. The proportion of the median equivalized income to be used 
+below $40\%$, $50\%$ and $70\%$ of the national weighted median equivalized
+disposable income. The proportion of the median equivalized income to be used
 can thereby be adjusted via the argument \code{p}.
 <<>>=
 arpr("eqIncome", weights = "rb050", p = 0.4, data = eusilc)
@@ -537,132 +535,132 @@ arpr("eqIncome", weights = "rb050", p = 0.5, data = eusilc)
 arpr("eqIncome", weights = "rb050", p = 0.7, data = eusilc)
 @
 
-In order to compute estimates for different subdomains, a breakdown variable 
-simply needs to be supplied as the \code{breakdown} argument. Note that in this 
-case the same overall at-risk-of-poverty threshold is used for all subdomains 
-\citep[see][]{EU-SILC04, EU-SILC09}. The following command computes the overall 
+In order to compute estimates for different subdomains, a breakdown variable
+simply needs to be supplied as the \code{breakdown} argument. Note that in this
+case the same overall at-risk-of-poverty threshold is used for all subdomains
+\citep[see][]{EU-SILC04, EU-SILC09}. The following command computes the overall
 estimate, as well as estimates for all NUTS2 regions.
 <<>>=
-arpr("eqIncome", weights = "rb050", breakdown = "db040", data = eusilc) 
+arpr("eqIncome", weights = "rb050", breakdown = "db040", data = eusilc)
 @
 
-However, any kind of breakdown can be supplied, e.g., the breakdowns defined by 
-\citet{EU-SILC04, EU-SILC09}. With the following lines of code, a breakdown 
-variable with all possible combinations of age categories and gender is defined 
-and added to the data set, before it is used to compute estimates for the 
+However, any kind of breakdown can be supplied, e.g., the breakdowns defined by
+\citet{EU-SILC04, EU-SILC09}. With the following lines of code, a breakdown
+variable with all possible combinations of age categories and gender is defined
+and added to the data set, before it is used to compute estimates for the
 corresponding domains.
 <<>>=
 ageCat <- cut(eusilc$age, c(-1, 16, 25, 50, 65, Inf), right=FALSE)
 eusilc$breakdown <- paste(ageCat, eusilc$rb090, sep=":")
-arpr("eqIncome", weights = "rb050", breakdown = "breakdown", data = eusilc)     
+arpr("eqIncome", weights = "rb050", breakdown = "breakdown", data = eusilc)
 @
-Clearly, the results are even more heterogeneous than for the breakdown into 
+Clearly, the results are even more heterogeneous than for the breakdown into
 NUTS2 regions.
 
-%The results are even more different when considering household size 
-%(\code{hsize}) and citizenship (\code{pb220a}) as the domain level for 
+%The results are even more different when considering household size
+%(\code{hsize}) and citizenship (\code{pb220a}) as the domain level for
 %estimation.
 %<<>>=
 %eusilc$breakdown <- paste(eusilc$hsize, eusilc$pb220a, sep=":")
-%arpr("eqIncome", weights = "rb050", breakdown = "breakdown", data = eusilc)     
+%arpr("eqIncome", weights = "rb050", breakdown = "breakdown", data = eusilc)
 %@
 
 
 \subsection{Quintile share ratio}
 
-The income \emph{quintile share ratio} (QSR) is defined as the ratio of the sum 
-of the equivalized disposable income received by the 20\% of the population 
-with the highest equivalized disposable income to that received by the 20\% of 
-the population with the lowest equivalized disposable income \citep{EU-SILC04, 
-EU-SILC09}. 
+The income \emph{quintile share ratio} (QSR) is defined as the ratio of the sum
+of the equivalized disposable income received by the 20\% of the population
+with the highest equivalized disposable income to that received by the 20\% of
+the population with the lowest equivalized disposable income \citep{EU-SILC04,
+EU-SILC09}.
 
-For the estimation of the quintile share ratio from a sample, let 
-$\hat{q}_{0.2}$ and $\hat{q}_{0.8}$ denote the weighted 20\% and 80\% 
-quantiles, respectively, as defined in Equation~(\ref{eq:wq}). Using index sets 
-$I_{\leq \hat{q}_{0.2}}$ and $I_{> \hat{q}_{0.8}}$ as defined in 
-Equations~(\ref{eq:01-Ileqt}) and~(\ref{eq:01-Igt}), respectively, the quintile 
+For the estimation of the quintile share ratio from a sample, let
+$\hat{q}_{0.2}$ and $\hat{q}_{0.8}$ denote the weighted 20\% and 80\%
+quantiles, respectively, as defined in Equation~(\ref{eq:wq}). Using index sets
+$I_{\leq \hat{q}_{0.2}}$ and $I_{> \hat{q}_{0.8}}$ as defined in
+Equations~(\ref{eq:01-Ileqt}) and~(\ref{eq:01-Igt}), respectively, the quintile
 share ratio is estimated by
 \begin{equation}
-\widehat{QSR} := \frac{\sum_{i \in I_{> \hat{q}_{0.8}}} w_{i} x_{i}}{\sum_{i 
+\widehat{QSR} := \frac{\sum_{i \in I_{> \hat{q}_{0.8}}} w_{i} x_{i}}{\sum_{i
 \in I_{\leq \hat{q}_{0.2}}} w_{i} x_{i}}.
 \end{equation}
 
-With package \pkg{laeken}, the quintile share ratio can be estimated using the 
-function \code{qsr()}. As for the at-risk-of-poverty rate, sample weights can 
+With package \pkg{laeken}, the quintile share ratio can be estimated using the
+function \code{qsr()}. As for the at-risk-of-poverty rate, sample weights can
 be supplied via the \code{weights} argument.
 <<>>=
-qsr("eqIncome", weights = "rb050", data = eusilc)   
+qsr("eqIncome", weights = "rb050", data = eusilc)
 @
 
-Computing estimates for different subdomains is again possible by specifying 
-the \code{breakdown} argument. In the following example, estimates for each 
+Computing estimates for different subdomains is again possible by specifying
+the \code{breakdown} argument. In the following example, estimates for each
 NUTS2 region are computed in addition to the overall estimate.
 <<>>=
-qsr("eqIncome", weights = "rb050", breakdown = "db040", data = eusilc) 
+qsr("eqIncome", weights = "rb050", breakdown = "db040", data = eusilc)
 @
 
-Nevertheless, it should be noted that the quintile share ratio is highly 
-influenced by outliers \citep[see][]{hulliger09a, alfons10b}. Since the upper 
-tail of income distributions virtually always contains nonrepresentative 
-outliers, robust estimators of the quintile share ratio should preferably be 
-used. Thus robust semi-parametric methods based on Pareto tail modeling are 
-implemented in package \pkg{laeken} as well. Their application is discussed in 
+Nevertheless, it should be noted that the quintile share ratio is highly
+influenced by outliers \citep[see][]{hulliger09a, alfons10b}. Since the upper
+tail of income distributions virtually always contains nonrepresentative
+outliers, robust estimators of the quintile share ratio should preferably be
+used. Thus robust semi-parametric methods based on Pareto tail modeling are
+implemented in package \pkg{laeken} as well. Their application is discussed in
 vignette \code{laeken-pareto} \citep{alfons11a}.
 
 
 \subsection{Relative median at-risk-of-poverty gap (by age and gender)}
 
-The \emph{relative median at-risk-of-poverty gap} (RMPG) is defined as the 
-difference between the median equivalized disposable income of persons below 
-the at-risk-of-poverty threshold and the at-risk of poverty threshold itself, 
-expressed as a percentage of the at-risk-of-poverty threshold \citep{EU-SILC04, 
-EU-SILC09}. 
+The \emph{relative median at-risk-of-poverty gap} (RMPG) is defined as the
+difference between the median equivalized disposable income of persons below
+the at-risk-of-poverty threshold and the at-risk of poverty threshold itself,
+expressed as a percentage of the at-risk-of-poverty threshold \citep{EU-SILC04,
+EU-SILC09}.
 
-%Let $wmed_{(poor)}$ the weighted median of the people who having an income 
-%below $ARPR$ defined in Equation~\ref{eq:ARPR}. Then the relative median 
+%Let $wmed_{(poor)}$ the weighted median of the people who having an income
+%below $ARPR$ defined in Equation~\ref{eq:ARPR}. Then the relative median
 %at-risk-of-poverty gap is estimated by
 %\begin{displaymath}
 %RMPG = \frac{ARPR - wmed_{(poor)}}{ARPR} \cdot 100
 %\end{displaymath}
 
-For the estimation of the relative median at-risk-of-poverty gap from a sample, 
-let $\widehat{ARPT}$ be the estimated at-risk-of-poverty threshold according to 
-Equation~(\ref{eq:ARPT}), and let $I_{< \widehat{ARPT}}$ be an index set of 
-persons with an equivalized disposable income below the 
-estimated at-risk-of-poverty threshold as defined in 
-Equation~(\ref{eq:01-Ilt}). Using this index set, define $\boldsymbol{x}_{< 
-\widehat{ARPT}} := (x_{i})_{i \in I_{< \widehat{ARPT}}}$ and 
-$\boldsymbol{w}_{< \widehat{ARPT}} := (w_{i})_{i \in I_{< \widehat{ARPT}}}$. 
-Furthermore, let $\hat{q}_{0.5} (\boldsymbol{x}_{< \widehat{ARPT}}, 
-\boldsymbol{w}_{< \widehat{ARPT}})$ be the corresponding weighted median 
-according to the definition in Equation~(\ref{eq:wq}). Then the relative median 
+For the estimation of the relative median at-risk-of-poverty gap from a sample,
+let $\widehat{ARPT}$ be the estimated at-risk-of-poverty threshold according to
+Equation~(\ref{eq:ARPT}), and let $I_{< \widehat{ARPT}}$ be an index set of
+persons with an equivalized disposable income below the
+estimated at-risk-of-poverty threshold as defined in
+Equation~(\ref{eq:01-Ilt}). Using this index set, define $\boldsymbol{x}_{<
+\widehat{ARPT}} := (x_{i})_{i \in I_{< \widehat{ARPT}}}$ and
+$\boldsymbol{w}_{< \widehat{ARPT}} := (w_{i})_{i \in I_{< \widehat{ARPT}}}$.
+Furthermore, let $\hat{q}_{0.5} (\boldsymbol{x}_{< \widehat{ARPT}},
+\boldsymbol{w}_{< \widehat{ARPT}})$ be the corresponding weighted median
+according to the definition in Equation~(\ref{eq:wq}). Then the relative median
 at-risk-of-poverty gap is estimated by
 \begin{equation}
-\widehat{RMPG} = \frac{\widehat{ARPT} - \hat{q}_{0.5} (\boldsymbol{x}_{< 
+\widehat{RMPG} = \frac{\widehat{ARPT} - \hat{q}_{0.5} (\boldsymbol{x}_{<
 \widehat{ARPT}}, \boldsymbol{w}_{< \widehat{ARPT}})}{\widehat{ARPT}} \cdot 100.
 \end{equation}
 
-In package \pkg{laeken}, the function \code{rmpg()} is implemented for the 
-estimation of the relative median at-risk-of-poverty gap. If available in the 
-data, sample weights should be supplied as the \code{weights} argument. Note 
-that the function \code{arpt()} for the estimation of the at-risk-of-poverty 
-threshold is called internally (cf. function \code{arpr()} for the 
+In package \pkg{laeken}, the function \code{rmpg()} is implemented for the
+estimation of the relative median at-risk-of-poverty gap. If available in the
+data, sample weights should be supplied as the \code{weights} argument. Note
+that the function \code{arpt()} for the estimation of the at-risk-of-poverty
+threshold is called internally (cf. function \code{arpr()} for the
 at-risk-of-poverty rate in Section~\ref{sec:ARPR}).
 
 <<>>=
 rmpg("eqIncome", weights = "rb050", data = eusilc)
 @
 
-Estimates for different subdomains can be computed by making use of the 
-\code{breakdown} argument. With the following command, the overall estimate and 
+Estimates for different subdomains can be computed by making use of the
+\code{breakdown} argument. With the following command, the overall estimate and
 estimates for all NUTS2 regions are computed.
 <<>>=
 rmpg("eqIncome", weights = "rb050", breakdown = "db040", data = eusilc)
 @
 
-For the relative median at-risk-of-poverty gap, the breakdown by age and gender 
-is of particular interest. In the following example, a breakdown variable with 
-all possible combinations of age categories and gender is defined and added to 
+For the relative median at-risk-of-poverty gap, the breakdown by age and gender
+is of particular interest. In the following example, a breakdown variable with
+all possible combinations of age categories and gender is defined and added to
 the data set. Afterwards, estimates for the corresponding domains are computed.
 <<>>=
 ageCat <- cut(eusilc$age, c(-1, 16, 25, 50, 65, Inf), right=FALSE)
@@ -673,38 +671,38 @@ rmpg("eqIncome", weights = "rb050", breakdown = "breakdown", data = eusilc)
 
 \subsection{Gini coefficient}
 
-The \emph{Gini coefficient} is defined as the relationship of cumulative shares 
-of the population arranged according to the level of equivalized disposable 
-income, to the cumulative share of the equivalized total disposable income 
+The \emph{Gini coefficient} is defined as the relationship of cumulative shares
+of the population arranged according to the level of equivalized disposable
+income, to the cumulative share of the equivalized total disposable income
 received by them \citep{EU-SILC04, EU-SILC09}.
 
-For the estimation of the Gini coefficient from a sample, the sample weights 
-need to be taken into account. In mathematical terms, the Gini coefficient is 
+For the estimation of the Gini coefficient from a sample, the sample weights
+need to be taken into account. In mathematical terms, the Gini coefficient is
 estimated by
 \begin{equation}
-\widehat{Gini} :=  100 \left[ \frac{2 \sum_{i=1}^{n} \left( w_{i} x_{i} 
-\sum_{j=1}^{i} w_{j} \right) - \sum_{i=1}^{n} w_{i}^{\phantom{i}2} 
-x_{i}}{\left( \sum_{i=1}^{n} w_{i} \right) \sum_{i=1}^{n} \left(w_{i} x_{i} 
+\widehat{Gini} :=  100 \left[ \frac{2 \sum_{i=1}^{n} \left( w_{i} x_{i}
+\sum_{j=1}^{i} w_{j} \right) - \sum_{i=1}^{n} w_{i}^{\phantom{i}2}
+x_{i}}{\left( \sum_{i=1}^{n} w_{i} \right) \sum_{i=1}^{n} \left(w_{i} x_{i}
 \right)} - 1 \right].
 \end{equation}
 
-The function \code{gini()} is available in \pkg{laeken} to estimate the Gini 
-coefficient. As for the other indicators, sample weights can be specified with 
+The function \code{gini()} is available in \pkg{laeken} to estimate the Gini
+coefficient. As for the other indicators, sample weights can be specified with
 the \code{weights} argument.
 <<>>=
 gini("eqIncome", weights = "rb050", data = eusilc)
 @
 
-Using the \code{breakdown} argument in the following command, estimates for the 
+Using the \code{breakdown} argument in the following command, estimates for the
 NUTS2 regions are computed in addition to the overall estimate.
 <<>>=
 gini("eqIncome", weights = "rb050", breakdown = "db040", data = eusilc)
 @
 
-Since outliers have a strong influence on the Gini coefficient, robust 
-estimators are preferred to the standard estimation described above 
-\citep[see][]{alfons10b}. Vignette \code{laeken-pareto} \citep{alfons11a} 
-describes how to apply the robust semi-parametric methods implemented in 
+Since outliers have a strong influence on the Gini coefficient, robust
+estimators are preferred to the standard estimation described above
+\citep[see][]{alfons10b}. Vignette \code{laeken-pareto} \citep{alfons11a}
+describes how to apply the robust semi-parametric methods implemented in
 package \pkg{laeken}.
 
 
@@ -715,13 +713,13 @@ package \pkg{laeken}.
 \section{Extracting information using  the \code{subset()} method}
 \label{sec:sub}
 
-If estimates of an indicator have been computed for several subdomains, it may 
-sometimes be desired to extract the results for some domains of particular 
-interest. In package \pkg{laeken}, this is implemented by taking advantage of 
-the object-oriented design of the package. Each of the functions for the 
-indicators described in Section~\ref{sec:ind} returns an object belonging to a 
-class of the same name as the respective function, e.g., function \code{arpr()} 
-returns an object of class \code{"arpr"}. All these classes thereby inherit 
+If estimates of an indicator have been computed for several subdomains, it may
+sometimes be desired to extract the results for some domains of particular
+interest. In package \pkg{laeken}, this is implemented by taking advantage of
+the object-oriented design of the package. Each of the functions for the
+indicators described in Section~\ref{sec:ind} returns an object belonging to a
+class of the same name as the respective function, e.g., function \code{arpr()}
+returns an object of class \code{"arpr"}. All these classes thereby inherit
 from the basic class \code{"indicator"} (see Section~\ref{sec:design}).
 <<>>=
 a <- arpr("eqIncome", weights = "rb050", breakdown = "db040", data = eusilc)
@@ -731,12 +729,12 @@ is.indicator(a)
 class(a)
 @
 
-To extract a subset of results from such an object, a \code{subset()} method 
-for the class \code{"indicator"} is implemented in \pkg{laeken}. The method 
-\code{subset.indicator()} is hidden from the user and is called internally by 
-the generic function \code{subset()} whenever an object of class 
-\code{"indicator"} is supplied. In the following example, the estimates of the 
-at-risk-of-poverty rate for the regions Lower Austria and Vienna are extracted 
+To extract a subset of results from such an object, a \code{subset()} method
+for the class \code{"indicator"} is implemented in \pkg{laeken}. The method
+\code{subset.indicator()} is hidden from the user and is called internally by
+the generic function \code{subset()} whenever an object of class
+\code{"indicator"} is supplied. In the following example, the estimates of the
+at-risk-of-poverty rate for the regions Lower Austria and Vienna are extracted
 from the object computed above.
 <<>>=
 subset(a, strata = c("Lower Austria", "Vienna"))
@@ -750,24 +748,24 @@ subset(a, strata = c("Lower Austria", "Vienna"))
 \section{Conclusions}
 \label{sec:concl}
 
-This vignette demonstrates the use of package \pkg{laeken} for point estimation 
-of the European Union indicators on social exclusion and poverty. Since the 
-description of the indicators in \citet{EU-SILC04, EU-SILC09} is weak from a 
-mathematical point of view, a more precise notation is given in this paper. 
-Currently, the most important indicators are implemented in \pkg{laeken}. Their 
-estimation is made easy with the package, as it is even possible to compute 
+This vignette demonstrates the use of package \pkg{laeken} for point estimation
+of the European Union indicators on social exclusion and poverty. Since the
+description of the indicators in \citet{EU-SILC04, EU-SILC09} is weak from a
+mathematical point of view, a more precise notation is given in this paper.
+Currently, the most important indicators are implemented in \pkg{laeken}. Their
+estimation is made easy with the package, as it is even possible to compute
 estimates for several years and different subdomains with a single command.
 
-Concerning the inequality indicators quintile share ratio and Gini coefficient, 
-it is clearly visible from their definitions that the standard estimators are 
-highly influenced by outliers \citep[see also][]{hulliger09a, alfons10b}. 
-Therefore, robust semi-parametric methods are implemented in \pkg{laeken} as 
-well. These are described in vignette \code{laeken-pareto} 
-\citep{alfons11a}, while variance and confidence interval estimation for the 
-indicators on social exclusion and poverty with package \pkg{laeken} is treated 
+Concerning the inequality indicators quintile share ratio and Gini coefficient,
+it is clearly visible from their definitions that the standard estimators are
+highly influenced by outliers \citep[see also][]{hulliger09a, alfons10b}.
+Therefore, robust semi-parametric methods are implemented in \pkg{laeken} as
+well. These are described in vignette \code{laeken-pareto}
+\citep{alfons11a}, while variance and confidence interval estimation for the
+indicators on social exclusion and poverty with package \pkg{laeken} is treated
 in vignette \code{laeken-variance} \citep{templ11b}.
 
- 
+
 % ---------------
 % acknowledgments
 % ---------------
@@ -776,7 +774,7 @@ in vignette \code{laeken-variance} \citep{templ11b}.
 This work was partly funded by the European Union (represented by the European
 Commission) within the 7$^{\mathrm{th}}$ framework programme for research
 (Theme~8, Socio-Economic Sciences and Humanities, Project AMELI (Advanced
-Methodology for European Laeken Indicators), Grant Agreement No. 217322). Visit 
+Methodology for European Laeken Indicators), Grant Agreement No. 217322). Visit
 \url{http://ameli.surveystatistics.net} for more information on the project.
 
 
@@ -784,7 +782,7 @@ Methodology for European Laeken Indicators), Grant Agreement No. 217322). Visit
 % bibliography
 % ------------
 
-\bibliographystyle{plainnat}  
+\bibliographystyle{plainnat}
 \bibliography{laeken}
 
 \end{document}

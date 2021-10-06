@@ -4,8 +4,15 @@
 \alias{fitPareto}
 \title{Fit income distribution models with the Pareto distribution}
 \usage{
-fitPareto(x, k = NULL, x0 = NULL, method = "thetaPDC",
-  groups = NULL, w = NULL, ...)
+fitPareto(
+  x,
+  k = NULL,
+  x0 = NULL,
+  method = "thetaPDC",
+  groups = NULL,
+  w = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{a numeric vector.}

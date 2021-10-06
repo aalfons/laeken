@@ -4,8 +4,13 @@
 \alias{weightedQuantile}
 \title{Weighted quantiles}
 \usage{
-weightedQuantile(x, weights = NULL, probs = seq(0, 1, 0.25),
-  sorted = FALSE, na.rm = FALSE)
+weightedQuantile(
+  x,
+  weights = NULL,
+  probs = seq(0, 1, 0.25),
+  sorted = FALSE,
+  na.rm = FALSE
+)
 }
 \arguments{
 \item{x}{a numeric vector.}

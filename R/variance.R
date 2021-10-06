@@ -5,13 +5,13 @@
 
 #' Variance and confidence intervals of indicators on social exclusion and
 #' poverty
-#' 
+#'
 #' Compute variance and confidence interval estimates of indicators on social
 #' exclusion and poverty.
-#' 
+#'
 #' This is a wrapper function for computing variance and confidence interval
 #' estimates of indicators on social exclusion and poverty.
-#' 
+#'
 #' @param inc either a numeric vector giving the equivalized disposable income,
 #' or (if \code{data} is not \code{NULL}) a character string, an integer or a
 #' logical vector specifying the corresponding column of \code{data}.
@@ -50,55 +50,54 @@
 #' @param gender either a numeric vector giving the gender, or (if \code{data}
 #' is not \code{NULL}) a character string, an integer or a logical vector
 #' specifying the corresponding column of \code{data}.
-#' @param method a character string specifying the method to be used (only for 
-#' \code{\link{gpg}}).  Possible values are \code{"mean"} for the mean, and 
-#' \code{"median"} for the median.  If weights are provided, the weighted mean 
+#' @param method a character string specifying the method to be used (only for
+#' \code{\link{gpg}}).  Possible values are \code{"mean"} for the mean, and
+#' \code{"median"} for the median.  If weights are provided, the weighted mean
 #' or weighted median is estimated.
 #' @param \dots additional arguments to be passed to \code{\link{bootVar}}.
-#' 
+#'
 #' @return An object of the same class as \code{indicator} is returned.  See
 #' \code{\link{arpr}}, \code{\link{qsr}}, \code{\link{rmpg}} or
 #' \code{\link{gini}} for details on the components.
-#' 
+#'
 #' @author Andreas Alfons
-#' 
+#'
 #' @seealso \code{\link{bootVar}}, \code{\link{arpr}}, \code{\link{qsr}},
 #' \code{\link{rmpg}}, \code{\link{gini}}
-#' 
-#' @references 
-#' A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators 
-#' from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of 
-#' Statistical Software}, \bold{54}(15), 1--25.  URL 
-#' \url{http://www.jstatsoft.org/v54/i15/}
-#' 
+#'
+#' @references
+#' A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators
+#' from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of
+#' Statistical Software}, \bold{54}(15), 1--25.  \doi{10.18637/jss.v054.i15}
+#'
 #' @keywords survey
-#' 
+#'
 #' @examples
 #' data(eusilc)
 #' a <- arpr("eqIncome", weights = "rb050", data = eusilc)
-#' 
+#'
 #' ## naive bootstrap
-#' variance("eqIncome", weights = "rb050", design = "db040", 
-#'     data = eusilc, indicator = a, R = 50, 
+#' variance("eqIncome", weights = "rb050", design = "db040",
+#'     data = eusilc, indicator = a, R = 50,
 #'     bootType = "naive", seed = 123)
-#' 
+#'
 #' ## bootstrap with calibration
-#' variance("eqIncome", weights = "rb050", design = "db040", 
-#'     data = eusilc, indicator = a, R = 50, 
+#' variance("eqIncome", weights = "rb050", design = "db040",
+#'     data = eusilc, indicator = a, R = 50,
 #'     X = calibVars(eusilc$db040), seed = 123)
-#' 
+#'
 #' @export
 
-variance <- function(inc, weights = NULL, years = NULL, breakdown = NULL, 
-                     design = NULL, cluster = NULL, data = NULL, indicator, 
-                     alpha = 0.05, na.rm = FALSE, type = "bootstrap", 
+variance <- function(inc, weights = NULL, years = NULL, breakdown = NULL,
+                     design = NULL, cluster = NULL, data = NULL, indicator,
+                     alpha = 0.05, na.rm = FALSE, type = "bootstrap",
                      gender = NULL, method = NULL, ...) {
   # initializations
   type <- match.arg(type)
   # call function corresponding to 'type'
   switch(type,
-         bootstrap = bootVar(inc, weights, years, breakdown, design, cluster, 
-                             data, indicator, alpha=alpha, na.rm=na.rm, 
+         bootstrap = bootVar(inc, weights, years, breakdown, design, cluster,
+                             data, indicator, alpha=alpha, na.rm=na.rm,
                              gender=gender, method=method, ...))
 }
 

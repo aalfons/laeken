@@ -4,8 +4,7 @@
 \alias{incMean}
 \title{Weighted mean income}
 \usage{
-incMean(inc, weights = NULL, years = NULL, data = NULL,
-  na.rm = FALSE)
+incMean(inc, weights = NULL, years = NULL, data = NULL, na.rm = FALSE)
 }
 \arguments{
 \item{inc}{either a numeric vector giving the (equivalized disposable)

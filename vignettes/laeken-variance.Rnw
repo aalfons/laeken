@@ -36,10 +36,8 @@
 \setlength{\footnotesep}{11pt}
 \footnotetext[1]{
   \begin{tabular}[t]{l}
-  Department of Statistics and Probability Theory, Vienna University of 
-  Technology\\
-  Methods Unit, Statistics Austria\\ 
-  E-mail: \href{mailto:templ@tuwien.ac.at}{templ@tuwien.ac.at}
+  Zurich University of Applied Sciences\\
+  E-mail: \href{mailto:matthias.templ@zhaw.ch}{matthias.templ@zhaw.ch}
   \end{tabular}
 }
 \footnotetext[2]{
@@ -57,13 +55,13 @@ options(prompt="R> ")
 
 
 \paragraph{Abstract}
-This vignette illustrates the application of variance estimation procedures to 
-indicators on social exclusion and poverty using the \proglang{R} package 
-\pkg{laeken}. To be more precise, it describes a general framework for 
-estimating variance and confidence intervals of indicators under complex 
-sampling designs. Currently, the package is focused on bootstrap approaches. 
-While the naive bootstrap does not modify the weights of the bootstrap samples, 
-a calibrated version allows to calibrate each bootstrap sample on auxiliary 
+This vignette illustrates the application of variance estimation procedures to
+indicators on social exclusion and poverty using the \proglang{R} package
+\pkg{laeken}. To be more precise, it describes a general framework for
+estimating variance and confidence intervals of indicators under complex
+sampling designs. Currently, the package is focused on bootstrap approaches.
+While the naive bootstrap does not modify the weights of the bootstrap samples,
+a calibrated version allows to calibrate each bootstrap sample on auxiliary
 information before deriving the bootstrap replicate estimate.
 
 
@@ -73,41 +71,41 @@ information before deriving the bootstrap replicate estimate.
 
 \section{Introduction}
 
-When point estimates of indicators are computed from samples, it is important 
-to also obtain variance estimates and confidence intervals in order to account 
-for variability due to sampling. Other sources of variability such as data 
-editing or imputation may need to be considered as well, but this is not 
-further discussed in this paper. While this vignette targets the topic of 
-variance and confidence interval estimation for the indicators on social 
-exclusion and poverty according to \citet{EU-SILC04, EU-SILC09}, the aim is not 
-to describe and evaluate the different approaches that have been proposed to 
-date. Instead, the aim is to present the functionality for the statistical 
-environment \proglang{R} \citep{RDev} implemented in the add-on package 
+When point estimates of indicators are computed from samples, it is important
+to also obtain variance estimates and confidence intervals in order to account
+for variability due to sampling. Other sources of variability such as data
+editing or imputation may need to be considered as well, but this is not
+further discussed in this paper. While this vignette targets the topic of
+variance and confidence interval estimation for the indicators on social
+exclusion and poverty according to \citet{EU-SILC04, EU-SILC09}, the aim is not
+to describe and evaluate the different approaches that have been proposed to
+date. Instead, the aim is to present the functionality for the statistical
+environment \proglang{R} \citep{RDev} implemented in the add-on package
 \pkg{laeken} \citep{laeken}.
 
-It should be noted that the basic design of the package, as well as standard 
-point estimation of the indicators on social exclusion and poverty, is 
-discussed in detail in vignette \code{laeken-standard} \citep{templ11a}. In 
-addition, vignette \code{laeken-pareto} \citep{alfons11a} presents more 
-sophisticated methods for point estimation of the indicators, which are less 
-influenced by outliers. Those documents can be viewed from within \proglang{R} 
+It should be noted that the basic design of the package, as well as standard
+point estimation of the indicators on social exclusion and poverty, is
+discussed in detail in vignette \code{laeken-standard} \citep{templ11a}. In
+addition, vignette \code{laeken-pareto} \citep{alfons11a} presents more
+sophisticated methods for point estimation of the indicators, which are less
+influenced by outliers. Those documents can be viewed from within \proglang{R}
 with the following commands:
 <<eval=FALSE>>=
 vignette("laeken-standard")
 vignette("laeken-pareto")
 @
-Morover, a general introduction to package \pkg{laeken} is published as 
+Morover, a general introduction to package \pkg{laeken} is published as
 \citet{alfons13b}.
 
-The data basis for the estimation of the indicators on social exclusion and 
-poverty is the \emph{European Union Statistics on Income and Living Conditions} 
-(EU-SILC), which is an annual panel survey conducted in EU member states and 
-other European countries. Package \pkg{laeken} provides the synthetic example 
-data \code{eusilc} consisting of $14\,827$ observations from $6\,000$ 
-households. Furthermore, the data were generated from Austrian EU-SILC survey 
-data from 2006 using the data simulation methodology proposed by 
-\citet{alfons11c} and implemented in the \proglang{R} package 
-\pkg{simPopulation} \citep{simPopulation}. The data set \code{eusilc} is used in the 
+The data basis for the estimation of the indicators on social exclusion and
+poverty is the \emph{European Union Statistics on Income and Living Conditions}
+(EU-SILC), which is an annual panel survey conducted in EU member states and
+other European countries. Package \pkg{laeken} provides the synthetic example
+data \code{eusilc} consisting of $14\,827$ observations from $6\,000$
+households. Furthermore, the data were generated from Austrian EU-SILC survey
+data from 2006 using the data simulation methodology proposed by
+\citet{alfons11c} and implemented in the \proglang{R} package
+\pkg{simPopulation} \citep{simPopulation}. The data set \code{eusilc} is used in the
 code examples throughout the paper.
 % -----
 <<>>=
@@ -115,10 +113,10 @@ library("laeken")
 data("eusilc")
 @
 
-The rest of the paper is organized as follows. Section~\ref{sec:variance} 
-presents the general wrapper function for estimating variance and confidence 
-intervals of indicators in package \pkg{laeken}. The naive and calibrated 
-bootstrap approaches are discussed in Sections~\ref{sec:naive} 
+The rest of the paper is organized as follows. Section~\ref{sec:variance}
+presents the general wrapper function for estimating variance and confidence
+intervals of indicators in package \pkg{laeken}. The naive and calibrated
+bootstrap approaches are discussed in Sections~\ref{sec:naive}
 and~\ref{sec:calib}, respectively. Section~\ref{sec:concl} concludes.
 
 
@@ -129,45 +127,45 @@ and~\ref{sec:calib}, respectively. Section~\ref{sec:concl} concludes.
 \section{General wrapper function for variance estimation} \label{sec:variance}
 
 The function \code{variance()} provides a flexible framework for estimating the
-variance and confidence intervals of indicators such as the 
-\emph{at-risk-of-poverty rate}, the \emph{Gini coefficient}, the \emph{quintile 
-share ratio} and the \emph{relative median at-risk-of-poverty gap}. For a 
-mathematical description and details on the implementation of these indicators 
-in the \proglang{R} package \pkg{laeken}, the reader is referred to vignette 
-\code{laeken-standard} \citep{templ11a}. In any case, \code{variance()} acts as 
-a general wrapper function for computing variance and confidence interval 
-estimates of indicators on social exclusion and poverty with package 
-\pkg{laeken}. The arguments of function \code{variance()} are shown in the 
+variance and confidence intervals of indicators such as the
+\emph{at-risk-of-poverty rate}, the \emph{Gini coefficient}, the \emph{quintile
+share ratio} and the \emph{relative median at-risk-of-poverty gap}. For a
+mathematical description and details on the implementation of these indicators
+in the \proglang{R} package \pkg{laeken}, the reader is referred to vignette
+\code{laeken-standard} \citep{templ11a}. In any case, \code{variance()} acts as
+a general wrapper function for computing variance and confidence interval
+estimates of indicators on social exclusion and poverty with package
+\pkg{laeken}. The arguments of function \code{variance()} are shown in the
 following:
 <<>>=
 args(variance)
 @
 
-All these arguments are fully described in the \proglang{R} help page of 
+All these arguments are fully described in the \proglang{R} help page of
 function \code{variance()}. The most important arguments are:
 \begin{description}
   \item[inc:] the income vector.
   \item[weights:] an optional vector of sample weights.
-  \item[breakdown:] an optional vector giving different domains in which 
+  \item[breakdown:] an optional vector giving different domains in which
   variances and confidence intervals should be computed.
-  \item[design:] an optional vector or factor giving different strata for 
+  \item[design:] an optional vector or factor giving different strata for
   stratified sampling designs.
-  \item[data:] an optional \code{data.frame}. If supplied, each of the above 
-    arguments should be specified as a character string or an integer or 
+  \item[data:] an optional \code{data.frame}. If supplied, each of the above
+    arguments should be specified as a character string or an integer or
     logical vector specifying the corresponding column.
-  \item[indicator:] an object inheriting from the class \code{"indicator"} that 
-    contains the point estimates of the indicator, such as \code{"arpr"} for 
-    the at-risk-of-poverty rate, \code{"qsr"} for the quintile share ratio, 
-    \code{"rmpg"} for the relative median at-risk-of-poverty gap, or 
+  \item[indicator:] an object inheriting from the class \code{"indicator"} that
+    contains the point estimates of the indicator, such as \code{"arpr"} for
+    the at-risk-of-poverty rate, \code{"qsr"} for the quintile share ratio,
+    \code{"rmpg"} for the relative median at-risk-of-poverty gap, or
     \code{"gini"} for the Gini coefficient.
-  \item[type:] a character string specifying the type of variance estimation 
-    to be used.  Currently, only \code{"bootstrap"} is implemented for 
+  \item[type:] a character string specifying the type of variance estimation
+    to be used.  Currently, only \code{"bootstrap"} is implemented for
     variance estimation based on bootstrap resampling.
 \end{description}
 
-In the following sections, two bootstrap methods for estimating the variance 
-and confidence intervals of point estimates for complex survey data are 
-described. Furthermore, their application using the function \code{variance()} 
+In the following sections, two bootstrap methods for estimating the variance
+and confidence intervals of point estimates for complex survey data are
+described. Furthermore, their application using the function \code{variance()}
 from package \pkg{laeken} is demonstrated.
 
 
@@ -177,77 +175,77 @@ from package \pkg{laeken} is demonstrated.
 
 \section{Naive bootstrap} \label{sec:naive}
 
-Let $\boldsymbol{X} := (\boldsymbol{x}_{1}, \ldots, \boldsymbol{x}_{n})'$ 
-denote a survey sample with $n$ observations and $p$ variables. Then the 
-\emph{naive bootstrap algorithm} for estimating the variance and confidence 
+Let $\boldsymbol{X} := (\boldsymbol{x}_{1}, \ldots, \boldsymbol{x}_{n})'$
+denote a survey sample with $n$ observations and $p$ variables. Then the
+\emph{naive bootstrap algorithm} for estimating the variance and confidence
 interval of an indicator can be summarized as follows:
 \begin{enumerate}
-  \item Draw $R$ independent bootstrap samples $\boldsymbol{X}_{1}^{*}, \ldots, 
+  \item Draw $R$ independent bootstrap samples $\boldsymbol{X}_{1}^{*}, \ldots,
   \boldsymbol{X}_{R}^{*}$ from $\boldsymbol{X}$.
-  \item Compute the bootstrap replicate estimates $\hat{\theta}_{r}^{*} := 
-  \hat{\theta}(\boldsymbol{X}_{r}^{*})$ for each bootstrap sample 
-  $\boldsymbol{X}_{r}^{*}$, $r = 1, \ldots, R$, where $\hat{\theta}$ denotes an 
-  estimator for a certain indicator of interest. Of course the sample weights 
-  always need to be considered for the computation of the bootstrap replicate 
+  \item Compute the bootstrap replicate estimates $\hat{\theta}_{r}^{*} :=
+  \hat{\theta}(\boldsymbol{X}_{r}^{*})$ for each bootstrap sample
+  $\boldsymbol{X}_{r}^{*}$, $r = 1, \ldots, R$, where $\hat{\theta}$ denotes an
+  estimator for a certain indicator of interest. Of course the sample weights
+  always need to be considered for the computation of the bootstrap replicate
   estimates.
-  \item Estimate the variance $V(\hat{\theta})$ by the variance of the $R$ 
+  \item Estimate the variance $V(\hat{\theta})$ by the variance of the $R$
   bootstrap replicate estimates:
   \begin{equation}
-  \hat{V}(\hat{\theta}) := \frac{1}{R-1} \sum_{r=1}^{R} \left( 
-  \hat{\theta}_{r}^{*} - \frac{1}{R} \sum_{s=1}^{R} \hat{\theta}_{s}^{*} 
+  \hat{V}(\hat{\theta}) := \frac{1}{R-1} \sum_{r=1}^{R} \left(
+  \hat{\theta}_{r}^{*} - \frac{1}{R} \sum_{s=1}^{R} \hat{\theta}_{s}^{*}
   \right)^{2}.
   \end{equation}
-  \item Estimate the confidence interval at confidence level $1 - \alpha$ by 
+  \item Estimate the confidence interval at confidence level $1 - \alpha$ by
   one of the following methods \citep[for details, see][]{davison97}:
   \begin{description}
-    \item[Percentile method:] $\left[ \hat{\theta}_{((R+1) 
-    \frac{\alpha}{2})}^{*}, \hat{\theta}_{((R+1)(1-\frac{\alpha}{2}))}^{*} 
+    \item[Percentile method:] $\left[ \hat{\theta}_{((R+1)
+    \frac{\alpha}{2})}^{*}, \hat{\theta}_{((R+1)(1-\frac{\alpha}{2}))}^{*}
     \right]$, as suggested by \cite{efron93}.
-    \item[Normal approximation:] $\hat{\theta} \pm z_{1-\frac{\alpha}{2}} \cdot 
-    \hat{V}(\hat{\theta})^{1/2}$ with $z_{1-\frac{\alpha}{2}} = \Phi^{-1}(1 - 
+    \item[Normal approximation:] $\hat{\theta} \pm z_{1-\frac{\alpha}{2}} \cdot
+    \hat{V}(\hat{\theta})^{1/2}$ with $z_{1-\frac{\alpha}{2}} = \Phi^{-1}(1 -
     \frac{\alpha}{2})$.
-    \item[Basic bootstrap method:] $\left[ 2\hat{\theta} - 
-    \hat{\theta}_{((R+1)(1-\frac{\alpha}{2}))}^{*}, 2\hat{\theta} - 
+    \item[Basic bootstrap method:] $\left[ 2\hat{\theta} -
+    \hat{\theta}_{((R+1)(1-\frac{\alpha}{2}))}^{*}, 2\hat{\theta} -
     \hat{\theta}_{((R+1)\frac{\alpha}{2})}^{*} \right]$.
   \end{description}
-  For the percentile and the basic bootstrap method, $\hat{\theta}_{(1)}^{*} 
-  \leq \ldots \leq \hat{\theta}_{(R)}^{*}$ denote the order statistics of the 
+  For the percentile and the basic bootstrap method, $\hat{\theta}_{(1)}^{*}
+  \leq \ldots \leq \hat{\theta}_{(R)}^{*}$ denote the order statistics of the
   bootstrap replicate estimates.
 \end{enumerate}
 
-In the following example, the variance and confidence interval of the 
-at-risk-of-poverty rate are estimated with the naive bootstrap procedure. The 
-output of function \code{variance()} is an object of the same class as the 
-point estimate supplied as the \code{indicator} argument, but with additional 
-components for the variance and confidence interval. In addition to the point 
-estimate, the income and the sample weights need to be supplied. Furthermore, 
-a stratified sampling design can be considered by specifying the \code{design} 
-argument, in which case observations are resampled separately within the 
-strata. To ensure reproducibility of the results, the seed of the random number 
+In the following example, the variance and confidence interval of the
+at-risk-of-poverty rate are estimated with the naive bootstrap procedure. The
+output of function \code{variance()} is an object of the same class as the
+point estimate supplied as the \code{indicator} argument, but with additional
+components for the variance and confidence interval. In addition to the point
+estimate, the income and the sample weights need to be supplied. Furthermore,
+a stratified sampling design can be considered by specifying the \code{design}
+argument, in which case observations are resampled separately within the
+strata. To ensure reproducibility of the results, the seed of the random number
 generator is set.
 <<>>=
 a <- arpr("eqIncome", weights = "rb050", data = eusilc)
-variance("eqIncome", weights = "rb050", design = "db040", 
+variance("eqIncome", weights = "rb050", design = "db040",
     data = eusilc, indicator = a, bootType = "naive", seed = 123)
 @
 
-One of the most convenient features of package \pkg{laeken} is that indicators 
-can be evaluated for different subdomains using a single command. This also 
-holds for variance estimation. Using the \code{breakdown} argument, the example 
-below produces variance and confidence interval estimates for each NUTS2 region 
+One of the most convenient features of package \pkg{laeken} is that indicators
+can be evaluated for different subdomains using a single command. This also
+holds for variance estimation. Using the \code{breakdown} argument, the example
+below produces variance and confidence interval estimates for each NUTS2 region
 in addition to the overall values.
 <<>>=
 b <- arpr("eqIncome", weights = "rb050", breakdown = "db040", data = eusilc)
-variance("eqIncome", weights = "rb050", breakdown = "db040", design = "db040", 
+variance("eqIncome", weights = "rb050", breakdown = "db040", design = "db040",
     data = eusilc, indicator = b, bootType = "naive", seed = 123)
 @
 
-It should be noted that the workhorse function \code{bootVar()} is called 
-internally by \code{variance()} for bootstrap variance and confidence interval 
-estimation. The function \code{bootVar()} could also be called directly by the 
-user in exactly the same manner. Moreover, variance and confidence interval 
-estimation for any other indicator implemented in package \pkg{laeken} is 
-straightforward---the application using function \code{variance()} or 
+It should be noted that the workhorse function \code{bootVar()} is called
+internally by \code{variance()} for bootstrap variance and confidence interval
+estimation. The function \code{bootVar()} could also be called directly by the
+user in exactly the same manner. Moreover, variance and confidence interval
+estimation for any other indicator implemented in package \pkg{laeken} is
+straightforward---the application using function \code{variance()} or
 \code{bootVar()} remains the same.
 
 
@@ -257,66 +255,66 @@ straightforward---the application using function \code{variance()} or
 
 \section{Calibrated bootstrap} \label{sec:calib}
 
-\cite{rao88} showed that the naive bootstrap is biased when used in the complex 
-survey context. They propose to increase the variance estimate in the $h$-th 
-stratum by a factor of $\frac{n_{h} - 1}{n_{h}}$ (if the bootstrap sample is of 
-the same size). In addition, they describe extensions to sampling without 
-replacement, unequal probability sampling, and two-stage cluster sampling with 
-equal probabilities and without replacement. 
+\cite{rao88} showed that the naive bootstrap is biased when used in the complex
+survey context. They propose to increase the variance estimate in the $h$-th
+stratum by a factor of $\frac{n_{h} - 1}{n_{h}}$ (if the bootstrap sample is of
+the same size). In addition, they describe extensions to sampling without
+replacement, unequal probability sampling, and two-stage cluster sampling with
+equal probabilities and without replacement.
 
-\cite{deville92} and \cite{deville93} provide a general description on how to 
-calibrate sample weights to account for known population totals. The naive 
-bootstrap does not include the recalibration of bootstrap samples in order to 
-fit known population totals and therefore is, strictly formulated, not suitable 
-for many practical applications. However, even though a bias might be 
-introduced, the naive bootstrap works well in many situations and is faster to 
-compute than the calibrated version. Hence it is a popular method often used in 
+\cite{deville92} and \cite{deville93} provide a general description on how to
+calibrate sample weights to account for known population totals. The naive
+bootstrap does not include the recalibration of bootstrap samples in order to
+fit known population totals and therefore is, strictly formulated, not suitable
+for many practical applications. However, even though a bias might be
+introduced, the naive bootstrap works well in many situations and is faster to
+compute than the calibrated version. Hence it is a popular method often used in
 practice.
 
-In real-world data, the inclusion probabilities for observations in the 
-population are in general not all equal, resulting in different \emph{design 
-weights} for the observations in the sample. Furthermore, the initial design 
-weights are in practice often adjusted by calibration, e.g., to account for 
-non-response or so that certain known population totals can be precisely 
-estimated from the survey sample. To give a simplified example, if the 
-population sizes in different regions are known, the sample weights may be 
-calibrated so that the Horvitz-Thompson estimates \citep{horvitz52} of the 
-population sizes equal the known true values. However, when bootstrap samples 
-are drawn from survey data, resampling observations has the effect that such 
-known population totals can no longer be precisely estimated. As a remedy, the 
+In real-world data, the inclusion probabilities for observations in the
+population are in general not all equal, resulting in different \emph{design
+weights} for the observations in the sample. Furthermore, the initial design
+weights are in practice often adjusted by calibration, e.g., to account for
+non-response or so that certain known population totals can be precisely
+estimated from the survey sample. To give a simplified example, if the
+population sizes in different regions are known, the sample weights may be
+calibrated so that the Horvitz-Thompson estimates \citep{horvitz52} of the
+population sizes equal the known true values. However, when bootstrap samples
+are drawn from survey data, resampling observations has the effect that such
+known population totals can no longer be precisely estimated. As a remedy, the
 sample weights of each bootstrap sample should be calibrated.
 
-The calibrated version of the bootstrap thus results in more precise variance 
-and confidence interval estimation, but comes with higher computational costs 
-than the naive approach. In any case, the \emph{calibrated bootstrap algorithm} 
-is obtained by adding the following step between Steps~1 and~2 of the naive 
+The calibrated version of the bootstrap thus results in more precise variance
+and confidence interval estimation, but comes with higher computational costs
+than the naive approach. In any case, the \emph{calibrated bootstrap algorithm}
+is obtained by adding the following step between Steps~1 and~2 of the naive
 bootstrap algorithm from Section~\ref{sec:naive}:
 \begin{itemize}
-  \item[1b.] Calibrate the sample weights for each bootstrap sample 
-  $\boldsymbol{X}_{r}^{*}$, $r = 1, \ldots, R$. Generalized raking procedures 
-  are thereby used for calibration: either a multiplicative method known as 
-  \emph{raking}, an additive method or a logit method \citep[see][]{deville92, 
+  \item[1b.] Calibrate the sample weights for each bootstrap sample
+  $\boldsymbol{X}_{r}^{*}$, $r = 1, \ldots, R$. Generalized raking procedures
+  are thereby used for calibration: either a multiplicative method known as
+  \emph{raking}, an additive method or a logit method \citep[see][]{deville92,
   deville93}.
 \end{itemize}
 
-The function call to \code{variance()} for the calibrated bootstrap is very 
-similar to its counterpart for the naive bootstrap. A matrix of auxiliary 
-calibration variables needs to be supplied via the argument \code{X}. In 
-addition, the argument \code{totals} can be used to supply the corresponding 
-population totals. If the \code{totals} argument is omitted, as in the 
-following example, the population totals are computed from the sample weights 
-of the original sample. This follows the assumption that those weights are 
+The function call to \code{variance()} for the calibrated bootstrap is very
+similar to its counterpart for the naive bootstrap. A matrix of auxiliary
+calibration variables needs to be supplied via the argument \code{X}. In
+addition, the argument \code{totals} can be used to supply the corresponding
+population totals. If the \code{totals} argument is omitted, as in the
+following example, the population totals are computed from the sample weights
+of the original sample. This follows the assumption that those weights are
 already calibrated on the supplied auxiliary variables.
 % -----
 <<>>=
-variance("eqIncome", weights = "rb050", design = "db040", 
-    data = eusilc, indicator = a, X = calibVars(eusilc$db040), 
+variance("eqIncome", weights = "rb050", design = "db040",
+    data = eusilc, indicator = a, X = calibVars(eusilc$db040),
     seed = 123)
 @
 % -----
-Note that the function \code{calibVars()} transforms a factor into a matrix of 
-binary variables, as required by the calibration function \code{calibWeights()}, 
-which is called internally. While the default is to use raking for calibration, 
+Note that the function \code{calibVars()} transforms a factor into a matrix of
+binary variables, as required by the calibration function \code{calibWeights()},
+which is called internally. While the default is to use raking for calibration,
 other methods can be specified via the \code{method} argument.
 
 
@@ -325,25 +323,25 @@ other methods can be specified via the \code{method} argument.
 % -----------
 
 \section{Conclusions} \label{sec:concl}
-Both bootstrap procedures for variance and confidence interval estimation of 
-indicators on social exclusion and poverty currently implemented in the 
-\proglang{R} package \pkg{laeken} have their strengths. While the naive 
-bootstrap is faster to compute, the calibrated bootstrap in general leads to 
-more precise results. The implementation of other procedures such as 
-linearization techniques \citep{kovacevic97, deville99, hulliger06, osier09} or 
+Both bootstrap procedures for variance and confidence interval estimation of
+indicators on social exclusion and poverty currently implemented in the
+\proglang{R} package \pkg{laeken} have their strengths. While the naive
+bootstrap is faster to compute, the calibrated bootstrap in general leads to
+more precise results. The implementation of other procedures such as
+linearization techniques \citep{kovacevic97, deville99, hulliger06, osier09} or
 the delete-a-group jackknife \citep{kott01} is future work.
 
-Furthermore, \citet{alfons09} demonstrated how the variance of indicators 
-computed from data with imputed values may be underestimated in bootstrap 
-procedures, depending on the indicator itself and the imputation procedure 
-used. They proposed to use the method described in \cite{little02}, which 
-consists of drawing bootstrap samples from the original data with missing 
-values, and to impute the missing data for each bootstrap sample before 
-computing the corresponding bootstrap replicate estimate. Of course, this 
-results in an additional increase of the computation time. The implementation 
-of this procedure in package \pkg{laeken} is future work. It should also be 
-noted that multiple imputation is a further possibility to consider the 
-additional uncertainty from imputation when estimating the variance of an 
+Furthermore, \citet{alfons09} demonstrated how the variance of indicators
+computed from data with imputed values may be underestimated in bootstrap
+procedures, depending on the indicator itself and the imputation procedure
+used. They proposed to use the method described in \cite{little02}, which
+consists of drawing bootstrap samples from the original data with missing
+values, and to impute the missing data for each bootstrap sample before
+computing the corresponding bootstrap replicate estimate. Of course, this
+results in an additional increase of the computation time. The implementation
+of this procedure in package \pkg{laeken} is future work. It should also be
+noted that multiple imputation is a further possibility to consider the
+additional uncertainty from imputation when estimating the variance of an
 indicator \citep[see][]{little02}.
 
 
@@ -355,7 +353,7 @@ indicator \citep[see][]{little02}.
 This work was partly funded by the European Union (represented by the European
 Commission) within the 7$^{\mathrm{th}}$ framework programme for research
 (Theme~8, Socio-Economic Sciences and Humanities, Project AMELI (Advanced
-Methodology for European Laeken Indicators), Grant Agreement No. 217322). Visit 
+Methodology for European Laeken Indicators), Grant Agreement No. 217322). Visit
 \url{http://ameli.surveystatistics.net} for more information on the project.
 
 
@@ -363,7 +361,7 @@ Methodology for European Laeken Indicators), Grant Agreement No. 217322). Visit
 % bibliography
 % ------------
 
-\bibliographystyle{plainnat}  
+\bibliographystyle{plainnat}
 \bibliography{laeken}
 
 \end{document}

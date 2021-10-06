@@ -82,8 +82,7 @@
 #' @references
 #' A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators
 #' from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of
-#' Statistical Software}, \bold{54}(15), 1--25.  URL
-#' \url{http://www.jstatsoft.org/v54/i15/}
+#' Statistical Software}, \bold{54}(15), 1--25.  \doi{10.18637/jss.v054.i15}
 #'
 #' A. Alfons, M. Templ, P. Filzmoser (2013) Robust estimation of economic
 #' indicators from survey samples based on Pareto tail modeling. \emph{Journal
@@ -245,8 +244,7 @@ paretoTail <- function(x, k = NULL, x0 = NULL, method = "thetaPDC",
 #' @references
 #' A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators
 #' from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of
-#' Statistical Software}, \bold{54}(15), 1--25.  URL
-#' \url{http://www.jstatsoft.org/v54/i15/}
+#' Statistical Software}, \bold{54}(15), 1--25.  \doi{10.18637/jss.v054.i15}
 #'
 #' A. Alfons, M. Templ, P. Filzmoser (2013) Robust estimation of economic
 #' indicators from survey samples based on Pareto tail modeling. \emph{Journal
@@ -373,8 +371,7 @@ replaceOut <- function(x, ...) {
 #' @references
 #' A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators
 #' from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of
-#' Statistical Software}, \bold{54}(15), 1--25.  URL
-#' \url{http://www.jstatsoft.org/v54/i15/}
+#' Statistical Software}, \bold{54}(15), 1--25.  \doi{10.18637/jss.v054.i15}
 #'
 #' A. Alfons, M. Templ, P. Filzmoser (2013) Robust estimation of economic
 #' indicators from survey samples based on Pareto tail modeling. \emph{Journal
@@ -463,8 +460,7 @@ reweightOut.paretoTail <- function(x, X, w = NULL, ...) {
 #' @references
 #' A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators
 #' from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of
-#' Statistical Software}, \bold{54}(15), 1--25.  URL
-#' \url{http://www.jstatsoft.org/v54/i15/}
+#' Statistical Software}, \bold{54}(15), 1--25.  \doi{10.18637/jss.v054.i15}
 #'
 #' @keywords manip
 #'

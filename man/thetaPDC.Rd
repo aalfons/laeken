@@ -65,18 +65,17 @@ thetaPDC(eusilc$eqIncome, x0 = ts$x0, w = eusilc$db090)
 
 }
 \references{
-A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators 
-from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of 
-Statistical Software}, \bold{54}(15), 1--25.  URL 
-\url{http://www.jstatsoft.org/v54/i15/}
+A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators
+from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of
+Statistical Software}, \bold{54}(15), 1--25.  \doi{10.18637/jss.v054.i15}
 
-A. Alfons, M. Templ, P. Filzmoser (2013) Robust estimation of economic 
-indicators from survey samples based on Pareto tail modeling. \emph{Journal 
+A. Alfons, M. Templ, P. Filzmoser (2013) Robust estimation of economic
+indicators from survey samples based on Pareto tail modeling. \emph{Journal
 of the Royal Statistical Society, Series C}, \bold{62}(2), 271--286.
 
 Vandewalle, B., Beirlant, J., Christmann, A., and Hubert, M.
-(2007) A robust estimator for the tail index of Pareto-type 
-distributions.  \emph{Computational Statistics & Data Analysis}, 
+(2007) A robust estimator for the tail index of Pareto-type
+distributions.  \emph{Computational Statistics & Data Analysis},
 \bold{51}(12), 6252--6268.
 }
 \seealso{

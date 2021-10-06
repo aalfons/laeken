@@ -4,8 +4,14 @@
 \alias{plot.paretoTail}
 \title{Diagnostic plot for the Pareto tail model}
 \usage{
-\method{plot}{paretoTail}(x, pch = c(1, 3), cex = 1, col = c("black",
-  "red"), bg = "transparent", ...)
+\method{plot}{paretoTail}(
+  x,
+  pch = c(1, 3),
+  cex = 1,
+  col = c("black", "red"),
+  bg = "transparent",
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class \code{"paretoTail"} as returned by
@@ -50,8 +56,7 @@ plot(fit)
 \references{
 A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators
 from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of
-Statistical Software}, \bold{54}(15), 1--25.  URL
-\url{http://www.jstatsoft.org/v54/i15/}
+Statistical Software}, \bold{54}(15), 1--25.  \doi{10.18637/jss.v054.i15}
 }
 \seealso{
 \code{\link{paretoTail}}, \code{\link{paretoQPlot}}

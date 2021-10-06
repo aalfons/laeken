@@ -4,9 +4,20 @@
 \alias{prop}
 \title{Proportion of an alternative distribution}
 \usage{
-prop(bin, weights = NULL, sort = NULL, years = NULL,
-  breakdown = NULL, design = NULL, cluster = NULL, data = NULL,
-  var = NULL, alpha = 0.05, na.rm = FALSE, ...)
+prop(
+  bin,
+  weights = NULL,
+  sort = NULL,
+  years = NULL,
+  breakdown = NULL,
+  design = NULL,
+  cluster = NULL,
+  data = NULL,
+  var = NULL,
+  alpha = 0.05,
+  na.rm = FALSE,
+  ...
+)
 }
 \arguments{
 \item{bin}{either a factor vector giving the values,
@@ -140,8 +151,7 @@ variance("eqIncomeCat", weights = "rb050",
 \references{
 A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators
 from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of
-Statistical Software}, \bold{54}(15), 1--25.  URL
-\url{http://www.jstatsoft.org/v54/i15/}
+Statistical Software}, \bold{54}(15), 1--25.  \doi{10.18637/jss.v054.i15}
 
 Working group on Statistics on Income and Living Conditions (2004)
 Common cross-sectional EU indicators based on EU-SILC; the gender

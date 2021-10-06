@@ -5,9 +5,17 @@
 \alias{calibWeights}
 \title{Calibrate sample weights}
 \usage{
-calibWeights(X, d, totals, q = NULL, method = c("raking", "linear",
-  "logit"), bounds = c(0, 10), maxit = 500, tol = 1e-06,
-  eps = .Machine$double.eps)
+calibWeights(
+  X,
+  d,
+  totals,
+  q = NULL,
+  method = c("raking", "linear", "logit"),
+  bounds = c(0, 10),
+  maxit = 500,
+  tol = 1e-06,
+  eps = .Machine$double.eps
+)
 }
 \arguments{
 \item{X}{a matrix of binary calibration variables (see
@@ -52,10 +60,9 @@ The final sample weights need to be computed by multiplying the resulting
 \emph{g}-weights with the initial sample weights.
 }
 \note{
-This is a faster implementation of parts of
-\code{\link[sampling]{calib}} from package \code{sampling}.  Note that the
-default calibration method is raking and that the truncated linear method is
-not yet implemented.
+This is a faster implementation of parts of \code{calib} from
+package \code{sampling}.  Note that the default calibration method is
+raking and that the truncated linear method is not yet implemented.
 }
 \examples{
 data(eusilc)

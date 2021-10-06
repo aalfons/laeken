@@ -4,8 +4,15 @@
 \alias{thetaWML}
 \title{Weighted maximum likelihood estimator}
 \usage{
-thetaWML(x, k = NULL, x0 = NULL, weight = c("residuals",
-  "probability"), const, bias = TRUE, ...)
+thetaWML(
+  x,
+  k = NULL,
+  x0 = NULL,
+  weight = c("residuals", "probability"),
+  const,
+  bias = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{a numeric vector.}

@@ -4,11 +4,11 @@
 # ----------------------------------------
 
 #' Integrated squared error (ISE) estimator
-#' 
+#'
 #' The integrated squared error (ISE) estimator estimates the shape parameter of
 #' a Pareto distribution based on the relative excesses of observations above a
 #' certain threshold.
-#' 
+#'
 #' The arguments \code{k} and \code{x0} of course correspond with each other.
 #' If \code{k} is supplied, the threshold \code{x0} is estimated with the \eqn{n
 #' - k} largest value in \code{x}, where \eqn{n} is the number of observations.
@@ -16,13 +16,13 @@
 #' by the number of observations in \code{x} larger than \code{x0}.  Therefore,
 #' either \code{k} or \code{x0} needs to be supplied.  If both are supplied,
 #' only \code{k} is used (mainly for back compatibility).
-#' 
+#'
 #' The ISE estimator minimizes the integrated squared error (ISE) criterion with
 #' a complete density model.  The minimization is carried out using %
 #' \code{\link[stats]{nlm}}.  By default, the starting value is obtained % with
 #' the Hill estimator (see \code{\link{thetaHill}}).
 #' \code{\link[stats]{optimize}}.
-#' 
+#'
 #' @param x a numeric vector.
 #' @param k the number of observations in the upper tail to which the Pareto
 #' distribution is fitted.
@@ -31,50 +31,49 @@
 #' @param w an optional numeric vector giving sample weights.
 #' @param \dots additional arguments to be passed to
 #' \code{\link[stats]{optimize}} (see \dQuote{Details}).
-#' 
+#'
 #' @return The estimated shape parameter.
-#' 
+#'
 #' @note The arguments \code{x0} for the threshold (scale parameter) of the
 #' Pareto distribution and \code{w} for sample weights were introduced in
 #' version 0.2.
-#' 
+#'
 #' @author Andreas Alfons and Josef Holzer
-#' 
+#'
 #' @seealso \code{\link{paretoTail}}, \code{\link{fitPareto}},
 #' \code{\link{thetaPDC}}, \code{\link{thetaHill}}
-#' 
-#' @references 
-#' A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators 
-#' from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of 
-#' Statistical Software}, \bold{54}(15), 1--25.  URL 
-#' \url{http://www.jstatsoft.org/v54/i15/}
-#' 
-#' A. Alfons, M. Templ, P. Filzmoser (2013) Robust estimation of economic 
-#' indicators from survey samples based on Pareto tail modeling. \emph{Journal 
+#'
+#' @references
+#' A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators
+#' from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of
+#' Statistical Software}, \bold{54}(15), 1--25.  \doi{10.18637/jss.v054.i15}
+#'
+#' A. Alfons, M. Templ, P. Filzmoser (2013) Robust estimation of economic
+#' indicators from survey samples based on Pareto tail modeling. \emph{Journal
 #' of the Royal Statistical Society, Series C}, \bold{62}(2), 271--286.
-#' 
+#'
 #' Vandewalle, B., Beirlant, J., Christmann, A., and Hubert, M.
-#' (2007) A robust estimator for the tail index of Pareto-type 
-#' distributions.  \emph{Computational Statistics & Data Analysis}, 
+#' (2007) A robust estimator for the tail index of Pareto-type
+#' distributions.  \emph{Computational Statistics & Data Analysis},
 #' \bold{51}(12), 6252--6268.
-#' 
+#'
 #' @keywords manip
-#' 
+#'
 #' @examples
 #' data(eusilc)
 #' # equivalized disposable income is equal for each household
 #' # member, therefore only one household member is taken
 #' eusilc <- eusilc[!duplicated(eusilc$db030),]
-#' 
+#'
 #' # estimate threshold
 #' ts <- paretoScale(eusilc$eqIncome, w = eusilc$db090)
-#' 
+#'
 #' # using number of observations in tail
 #' thetaISE(eusilc$eqIncome, k = ts$k, w = eusilc$db090)
-#' 
+#'
 #' # using threshold
 #' thetaISE(eusilc$eqIncome, x0 = ts$x0, w = eusilc$db090)
-#' 
+#'
 #' @export
 
 thetaISE <- function(x, k = NULL, x0 = NULL, w = NULL, ...) {
@@ -111,7 +110,7 @@ thetaISE <- function(x, k = NULL, x0 = NULL, w = NULL, ...) {
 }
 
 # internal function that assumes that data are ok and sorted
-.thetaISE <- function(x, k = NULL, x0 = NULL, w = NULL, 
+.thetaISE <- function(x, k = NULL, x0 = NULL, w = NULL,
         tol = .Machine$double.eps^0.25, ...) {
     n <- length(x)  # number of observations
     haveK <- !is.null(k)
@@ -137,7 +136,7 @@ thetaISE <- function(x, k = NULL, x0 = NULL, w = NULL, ...) {
     } else {
         wTail <- NULL
         ## integrated squared error distance criterion
-        # w ... sample weights (not needed here, only available to have the 
+        # w ... sample weights (not needed here, only available to have the
         #       same function definition)
         ISE <- function(theta, y, w) {
             f <- theta*y^(-1-theta)

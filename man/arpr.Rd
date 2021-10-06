@@ -4,9 +4,22 @@
 \alias{arpr}
 \title{At-risk-of-poverty rate}
 \usage{
-arpr(inc, weights = NULL, sort = NULL, years = NULL,
-  breakdown = NULL, design = NULL, cluster = NULL, data = NULL,
-  p = 0.6, var = NULL, alpha = 0.05, na.rm = FALSE, ...)
+arpr(
+  inc,
+  weights = NULL,
+  sort = NULL,
+  years = NULL,
+  breakdown = NULL,
+  design = NULL,
+  cluster = NULL,
+  data = NULL,
+  p = 0.6,
+  var = NULL,
+  alpha = 0.05,
+  threshold = NULL,
+  na.rm = FALSE,
+  ...
+)
 }
 \arguments{
 \item{inc}{either a numeric vector giving the equivalized disposable income,
@@ -59,6 +72,8 @@ be used, or \code{NULL} to omit variance estimation.  See
 \item{alpha}{numeric; if \code{var} is not \code{NULL}, this gives the
 significance level to be used for computing the confidence interval (i.e.,
 the confidence level is \eqn{1 - }\code{alpha}).}
+
+\item{threshold}{if `NULL`, the at-risk-at-poverty threshold is estimated from the data.}
 
 \item{na.rm}{a logical indicating whether missing values should be removed.}
 
@@ -115,8 +130,7 @@ arpr("eqIncome", weights = "rb050",
 \references{
 A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators
 from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of
-Statistical Software}, \bold{54}(15), 1--25.  URL
-\url{http://www.jstatsoft.org/v54/i15/}
+Statistical Software}, \bold{54}(15), 1--25.  \doi{10.18637/jss.v054.i15}
 
 Working group on Statistics on Income and Living Conditions (2004)
 Common cross-sectional EU indicators based on EU-SILC; the gender

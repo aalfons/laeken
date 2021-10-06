@@ -5,8 +5,15 @@
 \alias{print.minAMSE}
 \title{Weighted asymptotic mean squared error (AMSE) estimator}
 \usage{
-minAMSE(x, weight = c("Bernoulli", "JASA"), kmin, kmax, mmax, tol = 0,
-  maxit = 100)
+minAMSE(
+  x,
+  weight = c("Bernoulli", "JASA"),
+  kmin,
+  kmax,
+  mmax,
+  tol = 0,
+  maxit = 100
+)
 
 \method{print}{minAMSE}(x, ...)
 }

@@ -5,11 +5,27 @@
 \title{Bootstrap variance and confidence intervals of indicators on social exclusion
 and poverty}
 \usage{
-bootVar(inc, weights = NULL, years = NULL, breakdown = NULL,
-  design = NULL, cluster = NULL, data = NULL, indicator, R = 100,
-  bootType = c("calibrate", "naive"), X, totals = NULL,
-  ciType = c("perc", "norm", "basic"), alpha = 0.05, seed = NULL,
-  na.rm = FALSE, gender = NULL, method = NULL, ...)
+bootVar(
+  inc,
+  weights = NULL,
+  years = NULL,
+  breakdown = NULL,
+  design = NULL,
+  cluster = NULL,
+  data = NULL,
+  indicator,
+  R = 100,
+  bootType = c("calibrate", "naive"),
+  X,
+  totals = NULL,
+  ciType = c("perc", "norm", "basic"),
+  alpha = 0.05,
+  seed = NULL,
+  na.rm = FALSE,
+  gender = NULL,
+  method = NULL,
+  ...
+)
 }
 \arguments{
 \item{inc}{either a numeric vector giving the equivalized disposable income,
@@ -124,8 +140,7 @@ bootVar("eqIncome", weights = "rb050", design = "db040",
 \references{
 A. Alfons and M. Templ (2013) Estimation of Social Exclusion Indicators
 from Complex Surveys: The \R Package \pkg{laeken}.  \emph{Journal of
-Statistical Software}, \bold{54}(15), 1--25.  URL
-\url{http://www.jstatsoft.org/v54/i15/}
+Statistical Software}, \bold{54}(15), 1--25.  \doi{10.18637/jss.v054.i15}
 }
 \seealso{
 \code{\link{variance}}, \code{\link{calibWeights}},
