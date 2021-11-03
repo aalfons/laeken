@@ -5,6 +5,10 @@
 
 Estimation of indicators on social exclusion and poverty, as well as Pareto tail modeling for empirical income distributions.
 
+To cite package `laeken` in publications, please use:
+
+A. Alfons and M. Templ (2013). Estimation of Social Exclusion Indicators from Complex Surveys: The `R` Package `laeken`. *Journal of Statistical Software*, 54(15), 1--25. DOI [10.18637/jss.v054.i15](https://doi.org/10.18637/jss.v054.i15).
+
 
 ## Installation
 
