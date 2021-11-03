@@ -1,3 +1,10 @@
+Changes in laeken version 0.5.2
+
+    + Added argument 'threshold' to function 'arpr'.
+
+    + Fixed DOI's and URL's in documentation.
+
+
 Changes in laeken version 0.5.1
 
     + Fixed documentation of 'minAMSE'.
