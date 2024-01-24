@@ -1,21 +1,25 @@
 Package: laeken
 Type: Package
 Title: Estimation of Indicators on Social Exclusion and Poverty
-Version: 0.5.2
-Date: 2021-10-06
+Version: 0.5.3
+Date: 2024-01-24
 Depends: R (>= 3.2.0)
 Imports: boot, MASS
 Description: Estimation of indicators on social exclusion and poverty, as well
     as Pareto tail modeling for empirical income distributions.
 License: GPL (>= 2)
-Authors@R: c(person("Andreas", "Alfons", email = "alfons@ese.eur.nl",
-    role = c("aut", "cre")), person("Josef", "Holzer", role = "aut"),
-    person("Matthias", "Templ", role = "aut"),
-    person("Alexander", "Haider", role = "ctb"))
-Author: Andreas Alfons [aut, cre],
+Authors@R: 
+    c(person("Andreas", "Alfons", 
+             email = "alfons@ese.eur.nl",
+             role = c("aut", "cre"), 
+             comment = c(ORCID = "0000-0002-2513-3788")), 
+      person("Josef", "Holzer", role = "aut"),
+      person("Matthias", "Templ", role = "aut"),
+      person("Alexander", "Haider", role = "ctb"))
+Author: Andreas Alfons [aut, cre] (<https://orcid.org/0000-0002-2513-3788>),
     Josef Holzer [aut],
     Matthias Templ [aut],
     Alexander Haider [ctb]
 Maintainer: Andreas Alfons <alfons@ese.eur.nl>
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3

@@ -1,3 +1,10 @@
+Changes in laeken version 0.5.3
+
+    + Bugfix in function 'eqInc' if single income components are supplied.
+
+    + Updated CITATION file to use 'bibEntry'
+
+
 Changes in laeken version 0.5.2
 
     + Added argument 'threshold' to function 'arpr'.

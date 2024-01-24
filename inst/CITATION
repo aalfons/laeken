@@ -1,20 +1,14 @@
-citHeader("To cite laeken in publications use:")
-
-citEntry(entry = "Article",
-  title        = "Estimation of Social Exclusion Indicators from Complex Surveys: The {R} Package {laeken}",
-  author       = personList(as.person("Andreas Alfons"),
-                   as.person("Matthias Templ")),
-  journal      = "Journal of Statistical Software",
-  year         = "2013",
-  volume       = "54",
-  number       = "15",
-  pages        = "1--25",
-  doi          = "10.18637/jss.v054.i15",
-
-  textVersion  =
-  paste("Andreas Alfons, Matthias Templ (2013).",
-        "Estimation of Social Exclusion Indicators from Complex Surveys: The R Package laeken.",
-        "Journal of Statistical Software, 54(15), 1-25.",
-        "doi: 10.18637/jss.v054.i15.")
+bibentry(
+  bibtype = "Article",
+  title   = "Estimation of Social Exclusion Indicators from Complex Surveys: The {R} Package {laeken}",
+  author  = c(person(given = "Andreas", family = "Alfons",
+                     email = "alfons@ese.eur.nl"),
+              person(given = "Matthias", family = "Templ")),
+  journal = "Journal of Statistical Software",
+  year    = "2013",
+  volume  = "54",
+  number  = "15",
+  pages   = "1--25",
+  doi     = "10.18637/jss.v054.i15",
+  header  = "To cite laeken in publications use:"
 )
-

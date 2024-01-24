@@ -88,20 +88,20 @@ eqInc <- function(hid, hplus, hminus, pplus, pminus,
         npplus <- names(pplus)
         npminus <- names(pminus)
     } else {
-        hplus <- data[, hplus]
-        hminus <- data[, hminus]
+        hplus <- data[, hplus, drop=FALSE]
+        hminus <- data[, hminus, drop=FALSE]
         npplus <- pplus
-        pplus <- data[, npplus]
+        pplus <- data[, npplus, drop=FALSE]
         npminus <- pminus
-        pminus <- data[, npminus]
+        pminus <- data[, npminus, drop=FALSE]
         eqSS <- data[, eqSS]
         data <- data[, c(year, hid), drop=FALSE]
     }
     ## calculations
     hy020h <- rowSums(hplus, na.rm=TRUE) - rowSums(hminus, na.rm=TRUE)
     tmp <- aggregate(data.frame(pplus,pminus), data, sum, na.rm=TRUE)
-    hy020p <- rowSums(tmp[,npplus], na.rm=TRUE) -
-        rowSums(tmp[,npminus], na.rm=TRUE)
+    hy020p <- rowSums(tmp[,npplus, drop=FALSE], na.rm=TRUE) -
+        rowSums(tmp[,npminus, drop=FALSE], na.rm=TRUE)
     if(is.null(year)) {
         names(hy020p) <- tmp[, hid]
         hy020p <- unname(hy020p[as.character(data[, hid])])
