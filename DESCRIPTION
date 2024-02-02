@@ -21,5 +21,7 @@ Author: Andreas Alfons [aut, cre] (<https://orcid.org/0000-0002-2513-3788>),
     Matthias Templ [aut],
     Alexander Haider [ctb]
 Maintainer: Andreas Alfons <alfons@ese.eur.nl>
+URL: https://github.com/aalfons/laeken
+BugReports: https://github.com/aalfons/laeken/issues
 Encoding: UTF-8
 RoxygenNote: 7.2.3
