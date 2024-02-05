@@ -1,8 +1,8 @@
 Package: laeken
 Type: Package
 Title: Estimation of Indicators on Social Exclusion and Poverty
-Version: 0.5.3
-Date: 2024-01-25
+Version: 0.5.4
+Date: 2024-02-05
 Depends: R (>= 3.2.0)
 Imports: boot, MASS
 Description: Estimation of indicators on social exclusion and poverty, as well

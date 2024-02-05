@@ -1,3 +1,9 @@
+Changes in laeken version 0.5.4
+
+    + Added 'URL' and 'BugReports' to DESCRIPTION file to improve
+      discoverability of the GitHub repo.
+
+
 Changes in laeken version 0.5.3
 
     + Bugfix in function 'eqInc' if single income components are supplied.
